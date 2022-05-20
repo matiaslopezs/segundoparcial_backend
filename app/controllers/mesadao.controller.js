@@ -21,7 +21,7 @@ exports.create = (req, res) => {
     coordenada_y: req.body.coordenada_y,
     capacidad: req.body.capacidad,
     planta: req.body.planta,
-    //id_restaurante: req.body.id_restaurante
+    id_restaurante: req.body.id_restaurante,
   };
 
   // Guardamos a la base de datos
@@ -75,30 +75,28 @@ exports.findAll = (req, res) => {
 
 //DELETE mesa por id
 exports.destroy = (req, res) => {
+  var id_mesa = req.params.id;
 
-    var id_mesa = req.params.id;
-
-    Mesas.destroy({
-      where: {
-        id: id_mesa
-      },
-      force: true
-    })
+  Mesas.destroy({
+    where: {
+      id: id_mesa,
+    },
+    force: true,
+  })
 
     .then((data) => {
-      if(data==1){
-        res.send("La mesa se eliminó con exito "+data);
-      }else{
-        res.send("La mesa a eliminar no existe "+data);
+      if (data == 1) {
+        res.send("La mesa se eliminó con exito " + data);
+      } else {
+        res.send("La mesa a eliminar no existe " + data);
       }
-      })
-  
-      .catch((err) => {
-        res.status(500).send({
-          message: "Ocurrio un error al eliminar la mesa." || err.message,
-        });
-      });
+    })
 
+    .catch((err) => {
+      res.status(500).send({
+        message: "Ocurrio un error al eliminar la mesa." || err.message,
+      });
+    });
 };
 
 //PUT mesa por id
@@ -109,29 +107,34 @@ exports.update = (req, res) => {
   coordenadaY = req.body.coordenada_y;
   planta_mesa = req.body.planta;
   capacidad_mesa = req.body.capacidad;
+  restauranteId = req.body.id_restaurante;
 
-  Mesas.update({ 
-    coordenada_x: coordenadaX,
-    coordenada_y: coordenadaY,
-    planta: planta_mesa,
-    capacidad: capacidad_mesa,
-    nombre: nombre_mesa
-  }, {
-    where: {
-      id: id_mesa
+  Mesas.update(
+    {
+      coordenada_x: coordenadaX,
+      coordenada_y: coordenadaY,
+      planta: planta_mesa,
+      capacidad: capacidad_mesa,
+      nombre: nombre_mesa,
+      id_restaurante: restauranteId,
+    },
+    {
+      where: {
+        id: id_mesa,
+      },
     }
-  })
-  .then((data) => {
-    if(data==1){
-      res.send("La mesa se actualizó con exito "+data);
-    }else{
-      res.send("La mesa a actualizar no existe "+data);
-    }
+  )
+    .then((data) => {
+      if (data == 1) {
+        res.send("La mesa se actualizó con exito " + data);
+      } else {
+        res.send("La mesa a actualizar no existe " + data);
+      }
     })
 
     .catch((err) => {
       res.status(500).send({
-        message: "Ocurrio un error al actualizar la mesa." || err.message,
+        message: err.message || "Ocurrio un error al actualizar la mesa." ,
       });
     });
-}
+};
