@@ -16,4 +16,5 @@ db.Sequelize = Sequelize;
 db.sequelize = sequelize;
 db.Restaurantes = require("./restaurante.model.js")(sequelize, Sequelize);
 db.Mesas = require("./mesa.model.js")(sequelize, Sequelize);
+db.Reservas = require("./reserva.model.js")(sequelize, Sequelize);
 module.exports = db;

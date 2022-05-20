@@ -19,8 +19,9 @@ app.get("/", (req, res) => {
 // set port, listen for requests
 const PORT = process.env.PORT || 9090;
 // cargamos las rutas con la línea de abajo
-require("./app/routes/restaurantereserva.routes.js")(app);
+require("./app/routes/restaurante.routes.js")(app);
 require("./app/routes/mesa.routes.js")(app);
+require("./app/routes/reserva.routes.js")(app);
 app.listen(PORT, () => {
     console.log('Servidor corriendo en puerto 9090.');
 });
