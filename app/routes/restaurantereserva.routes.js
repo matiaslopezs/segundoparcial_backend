@@ -5,6 +5,8 @@ module.exports = app => {
     router.post("/", restaurante.create);
     router.get("/", restaurante.findAll);
     router.get("/:id", restaurante.findOne);
+    router.put("/", restaurante.update);
+    router.delete( "/:id",restaurante.delete);
     //registramos en la api
-    app.use('/api/restaurantereserva', router);
+    app.use('/api/restaurante', router);
 };

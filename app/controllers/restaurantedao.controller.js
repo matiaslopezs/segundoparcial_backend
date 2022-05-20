@@ -4,7 +4,7 @@ const Op = db.Sequelize.Op;
 
 //POST
 exports.create = (req, res) => { //creamos una nueva entidad
-    // Validate request (dejo como ejemplo por si necesitemos validar un campo
+    // Validate request (dejo como ejemplo por si necesitemos validar un campo)
 //    if (!req.body.factura) {
 //        res.status(400).send({
 //            message: "Debe enviar numero de factura!"
@@ -38,7 +38,8 @@ exports.findOne = (req, res) => {
         })
         .catch(err => {
             res.status(500).send({
-            message: "Error al obtener restaurante con id=" + id
+                message:
+                    err.message || "Error al obtener restaurante con id=" + id
         });
     });
 };
@@ -58,3 +59,50 @@ exports.findAll = (req, res) => {
             });
         });
 };
+
+//PUT (update)
+exports.update = async(req, res) => {
+    if (!req.body.id) {
+       res.status(400).send({
+           message: "Debe especificar el id del restaurante!"
+       });
+    }
+    const id = req.body.id;
+    try {
+        const restaurante = await Restaurantes.findByPk(id);
+        if(!restaurante){
+            res.status(404).send({
+                message: "No se encuentra el restaurante a modificar"
+            });
+        }else{
+            restaurante.nombre = req.body.nombre;
+            restaurante.direccion = req.body.direccion;
+            const data = await restaurante.save();
+            res.send(data);
+        }
+    }catch (error){
+        res.status(500).send({
+            message: "No se pudo actualizar el restaurante. RAZÓN: "+error.message
+        });
+    }
+}
+
+//DELETE
+exports.delete = async(req, res) => {
+    const {id} = req.params;
+    try {
+        const restaurante = await Restaurantes.findByPk(id);
+        if (!restaurante){
+            res.status(404).send({
+                message: "No se encuentra el restaurante a eliminar"
+            });
+        }else{
+            const data = await restaurante.destroy();
+            res.send(data);
+        }
+    }catch (error){
+        res.status(500).send({
+            message: "No se pudo eliminar el restaurante. RAZÓN: "+error.message
+        })
+    }
+}
