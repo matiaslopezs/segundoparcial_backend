@@ -60,6 +60,7 @@ module.exports = (sequelize, Sequelize) => {
           // La Mesa.belongsTo(Restaurantes)asociación significa que existe una relación uno a uno entre Mesa y Restaurantes,
           // con la clave externa definida en el modelo fuente ( Mesa).
           Mesa.belongsTo(models.Restaurantes);
+          Mesa.hasMany(models.Reservas);
         },
       },
     }

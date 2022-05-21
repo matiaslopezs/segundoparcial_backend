@@ -24,6 +24,8 @@ module.exports = (sequelize, Sequelize) => {
           //La Restaurante.hasMany(Mesas)asociación significa que existe una relación
           // de uno a muchos entre Restaurante y Mesas, con la clave externa definida en el modelo de destino ( Mesas).
           Restaurante.hasMany(models.Mesas);
+          //un restaurante tiene varias reservas;
+          Restaurante.hasMany(models.Reservas);
         },
       },
     }

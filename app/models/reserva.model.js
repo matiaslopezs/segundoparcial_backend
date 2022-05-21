@@ -3,17 +3,17 @@ module.exports = (sequelize, Sequelize) => {
     const Reserva = sequelize.define("Reserva", { //sequeliza define que así se llamara la entidad en la DB y sus atributos
         id_restaurante: {
             type: Sequelize.BIGINT,
-            // references: {
-            //     model: Restaurante,
-            //     key: 'id'
-            // }
+            references: {
+                model: "Restaurantes",
+                key: "id"
+            }
         },
         id_mesa: {
             type: Sequelize.BIGINT,
-            // references: {
-            //     model: Mesas,
-            //     key: 'id'
-            // }
+            references: {
+                model: "Mesas",
+                key: "id"
+            }
         },
         fecha: {
             type: Sequelize.DATE
@@ -27,8 +27,8 @@ module.exports = (sequelize, Sequelize) => {
         id_cliente: {
           type: Sequelize.BIGINT,
             // references: {
-            //     model: Cliente,
-            //     key: 'id'
+            //     model: "Clientes",
+            //     key: "id"
             // }
         },
         cantidad_lugares: {
@@ -39,6 +39,18 @@ module.exports = (sequelize, Sequelize) => {
             primaryKey: true,
             autoIncrement: true
         }
+    },
+    {
+        classMethods: {
+            associate: function (models) {
+                // un cliente puede tener varias reservas.
+                // un restaurante puede tener varias reservas.
+                // una mesa puede tener varias reservas (en diferentes horarios).
+                Reserva.belongsTo(models.Restaurantes);
+                Reserva.belongsTo(models.Mesas);
+                // Reserva.belongsTo(models.Clientes);
+            },
+        },
     });
     return Reserva;
 };

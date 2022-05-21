@@ -72,9 +72,12 @@ exports.update = async(req, res) => {
                 message: "No se encuentra la reserva a modificar"
             });
         }else{
+            reserva.id_restaurante = req.body.id_restaurante;
+            reserva.id_mesa = req.body.id_mesa;
             reserva.fecha= req.body.fecha;
             reserva.hora_entrada= req.body.hora_entrada;
             reserva.hora_salida= req.body.hora_salida;
+            // reserva.id_cliente = req.body.id_cliente;
             reserva.cantidad_lugares= req.body.cantidad_lugares;
             const data = await reserva.save();
             res.send(data);
