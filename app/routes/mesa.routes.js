@@ -9,7 +9,9 @@ module.exports = (app) => {
 
   router.get("/:id", mesa.findOne);
 
-  router.delete("/:id", mesa.delete);
+  router.delete("/:id", mesa.destroy);
+
+  router.put("/", mesa.update);
 
   app.use("/api/mesa", router);
 };
