@@ -9,6 +9,8 @@ module.exports = (app) => {
 
   router.get("/:id", mesa.findOne);
 
+  router.get("/restaurantes/:id_restaurante",mesa.findByRestaurant);
+
   router.delete("/:id", mesa.destroy);
 
   router.put("/", mesa.update);
