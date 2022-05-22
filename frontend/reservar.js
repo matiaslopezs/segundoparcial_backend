@@ -8,6 +8,37 @@ const restaurantes_get_all = async()=>{
     }
 }
 
+const get_all_mesas_by_restaurante = async(id_restaurant)=>{
+    mesas = await fetch(URL+"api/mesa/restaurantes/"+id_restaurant)
+    if(mesas){
+        return mesas.json()
+    }
+}
+
+const get_mesas_ocupadas = async (id_restaurante,fecha,hora_entrada,hora_salida,cantidad_lugares) =>{
+    date=fecha
+    parametros = id_restaurante+"/"+date+"/"+hora_entrada+"/"+hora_salida+"/"+cantidad_lugares
+    respuesta= await fetch(URL+"api/reserva/mesasocupadas/"+parametros)
+    console.log("mesas ocupadas: "+respuesta)
+    if(respuesta){
+        return respuesta.json()
+    }
+}
+
+const get_mesas_disponibles=(mesas,mesas_ocupadas)=>{
+    mesas_disp = []
+    mesas.forEach(elemento =>{
+        var mesa = mesas_ocupadas.find( valor =>{
+            return valor === elemento.id
+        })
+        if(!mesa){
+            mesas_disp.push(elemento)
+        }
+    });
+    console.log("mesas_disponibles: "+mesas_disp)
+    return mesas_disp;
+}
+
 const app = new Vue({
     el:'#app',
     data:{
@@ -37,15 +68,18 @@ const app = new Vue({
                 this.valorcheck = 2;
             }
         },
-        filtrarmesas(){
-            if (this.restaurante_id!==0 && this.fecha !== null && this.rango_hora!== "Hora de entrada y salida" && this.cantidad_lugares !== 0){
+        async filtrarmesas() {
+            if (this.restaurante_id !== 0 && this.fecha !== null && this.rango_hora !== "Hora de entrada y salida" && this.cantidad_lugares !== 0) {
                 this.flagmesas = true;
-            }else {
+            } else {
                 alert("Debe completar todos los datos anteriores");
             }
             // alert("restaurante: "+this.restaurante_id+" fecha: "+this.fecha+" rango hora: "+this.rango_hora +" cantidad: "+this.cantidad_lugares);
-            this.hora_entrada = parseInt(this.rango_hora.slice(0,2));
+            this.hora_entrada = parseInt(this.rango_hora.slice(0, 2));
             this.hora_salida = parseInt(this.rango_hora.slice(3));
+            let mesastodas = await get_all_mesas_by_restaurante(this.restaurante_id)
+            let mesasocupadas = await get_mesas_ocupadas(this.restaurante_id, this.fecha, this.hora_entrada, this.hora_salida, this.cantidad_lugares)
+            this.mesasdisponibles = get_mesas_disponibles(mesastodas,mesasocupadas)
         }
     },
 })

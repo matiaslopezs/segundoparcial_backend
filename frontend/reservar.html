@@ -83,7 +83,7 @@
                     <div v-if="flagmesas==true">
                         <select class="form-select" aria-label="Default select example">
                             <option selected>Mesas disponibles</option>
-                            <option v-for="mesa in mesasdisponibles" :value="mesa.id">{{mesa.nombre}} ubicación: {{mesa.coordenada_x}},{{mesa.coordenada_y}}</option>
+                            <option v-for="mesa in mesasdisponibles" :value="mesa.id">{{mesa.nombre}}, ubicación: {{mesa.coordenada_x}},{{mesa.coordenada_y}}, capacidad: {{mesa.capacidad}}</option>
                         </select>
                     </div>
                     <div v-if="flagmesas==false">

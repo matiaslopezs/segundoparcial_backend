@@ -1,6 +1,7 @@
 const db = require("../models");
-const {response} = require("express"); //importamos nuestro módulo de reserva
+const sequelize = db.sequelize; //importamos nuestro módulo de reserva
 const Reservas = db.Reservas; //controller
+const {QueryTypes} = require('sequelize');
 const Op = db.Sequelize.Op;
 
 //POST
@@ -78,19 +79,15 @@ exports.findByRestaurant = (req, res) => {
 exports.getMesasNotAvailable = (req, res) => {
     // var condition = { nombre: { [Op.iLike]: `%${nombreb}%` } } : null;
     let fecha_query = new Date(req.params.fecha)
+    let inicio = (parseInt(req.params.hora_entrada)+1).toString()
     Reservas.findAll({
         where: {
             id_restaurante: req.params.id_restaurante,
-            hora_entrada: {
-                [Op.gte]: req.params.hora_entrada,
-                [Op.lt]: req.params.hora_salida
-            },
-            hora_salida: {
-                [Op.gt]: req.params.hora_entrada,
-                [Op.lte]: req.params.hora_salida
-            },
-        //    id_cliente: req.params.id_cliente,
-            cantidad_lugares: { [Op.lte]: req.params.cantidad_lugares},
+            [Op.or]:[
+                {hora_entrada: req.params.hora_entrada},
+                {hora_salida:req.params.hora_salida}
+            ],
+            cantidad_lugares: { [Op.gte]: req.params.cantidad_lugares},
         },
         attributes: ['id_mesa','fecha']
     })
