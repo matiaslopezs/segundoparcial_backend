@@ -16,14 +16,14 @@
             <div class="col-md-6" id="app">
                 <div class="mb-3">
                     <p>1. Elija el restaurante en el que desea reservar</p>
-                    <select class="form-select" aria-label="Default select example" id="seleccionarRestaurante">
+                    <select class="form-select" aria-label="Default select example" id="seleccionarRestaurante" v-model.number="restaurante_id">
                         <option selected>Restaurantes disponibles</option>
                         <option v-for="restaurante in restaurantes" :value="restaurante.id">{{restaurante.nombre}}</option>
                     </select>
                 </div>
                 <div class="mb-3">
                     <p>2. Seleccione la fecha en la que desea reservar</p>
-                    <input type="date" required class="form-control" id="datePicker">
+                    <input type="date" v-model="fecha" required class="form-control" id="datePicker">
                 </div>
                 <div class="mb-3">
                     <p>3. Ahora elija la cantidad de horas</p>
@@ -44,11 +44,11 @@
                     <p>4. Elija el horario a reservar</p>
                     <div v-if="valorcheck==0">
                         <select class="form-select" disabled aria-label="Default select example">
-                            <option value="1" selected>Primero elija cantidad de horas</option>
+                            <option selected>Primero elija cantidad de horas</option>
                         </select>
                     </div>
                     <div v-if="valorcheck==1">
-                        <select class="form-select" aria-label="Default select example">
+                        <select class="form-select" aria-label="Default select example" v-model="rango_hora">
                             <option value="12-13">12 a 13 hs</option>
                             <option value="13-14">13 a 14 hs</option>
                             <option value="14-15">14 a 15 hs</option>
@@ -59,7 +59,7 @@
                         </select>
                     </div>
                     <div v-if="valorcheck==2">
-                    <select class="form-select" aria-label="Default select example">
+                    <select class="form-select" aria-label="Default select example" v-model="rango_hora">
                         <option value="12-14">12 a 14 hs</option>
                         <option value="13-15">13 a 15 hs</option>
                         <option value="19-21">19 a 21 hs</option>
@@ -70,18 +70,30 @@
                 </div>
                 <div class="mb-3">
                     <p>5. Indique cantidad de lugares a reservar</p>
-                    <input type="text" class="form-control" id="cantidad_lugares">
+                    <input type="text" v-model.number="cantidad_lugares" class="form-control" id="cantidad_lugares">
                     <div id="lugareshelp" class="form-text">Asegurese de reservar la cantidad necesaria.</div>
                 </div>
+                <p>6. Confirme los datos para cargar las mesas disponibles</p>
+                <div class="button" align="center">
+                    <button @click="filtrarmesas()" type="button" class="btn btn-outline-primary">Filtrar Mesas</button>
+                </div>
+                <br>
                 <div class="mb-3">
-                    <p>6. Ahora elija una mesa entre las disponibles</p>
-                    <select class="form-select" aria-label="Default select example">
-                        <option selected>Mesas disponibles</option>
-                        <option v-for="mesa in mesas" :value="mesa.id">{{mesa.nombre}} ubicación: {{mesa.coordenada_x}},{{mesa.coordenada_y}}</option>
-                    </select>
+                    <p>7. Ahora elija una mesa entre las disponibles</p>
+                    <div v-if="flagmesas==true">
+                        <select class="form-select" aria-label="Default select example">
+                            <option selected>Mesas disponibles</option>
+                            <option v-for="mesa in mesasdisponibles" :value="mesa.id">{{mesa.nombre}} ubicación: {{mesa.coordenada_x}},{{mesa.coordenada_y}}</option>
+                        </select>
+                    </div>
+                    <div v-if="flagmesas==false">
+                        <select class="form-select" aria-label="Default select example" disabled>
+                            <option selected>Antes complete los pasos anteriores</option>
+                        </select>
+                    </div>
                 </div>
                 <div class="mb-3">
-                    <p>7. Por último ingrese sus datos</p>
+                    <p>8. Por último ingrese sus datos</p>
                     <select class="form-select" aria-label="Default select example">
                         <option selected>Elija su cédula</option>
                         <option value="1">One</option>
