@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.7.1/chart.min.js"></script>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+    </link>
+    <title>Document</title>
+</head>
+<body>
+    <form>
+        <label for="entradafiltro">Filtrar por: </label>
+        <input type="text" id="entradafiltro" name="entradafiltro" 
+        placeholder="restaurante, fecha, cliente" required="true">
+        <input type="submit" value="Filtrar">
+    </form>
+    
+    <div text-align="center" border="10px">   
+        <table border="1px" width="100%">
+            <tr>
+                <th>id_restaurante</th>
+                <th>id_reserva</th>
+                <th>id_mesa</th>
+                <th>fecha</th>
+                <th>hora_entrada</th>
+                <th>hora_salida</th>
+                <th>id_cliente</th>
+                <th>cantidad_lugares</th>
+            </tr>
+            <tr>
+                <td>1</td>
+                <td>1</td>
+                <td>1</td>
+                <td>2022-05-21</td>
+                <td>20</td>
+                <td>22</td>
+                <td>1</td>
+                <td>2</td>
+            </tr>
+        </table>
+    </div>
+</body>
+</html>
