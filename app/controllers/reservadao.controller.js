@@ -1,5 +1,7 @@
-const db = require("../models"); //importamos nuestro módulo de reserva
+const db = require("../models");
+const sequelize = db.sequelize; //importamos nuestro módulo de reserva
 const Reservas = db.Reservas; //controller
+const {QueryTypes} = require('sequelize');
 const Op = db.Sequelize.Op;
 
 //POST
@@ -53,6 +55,58 @@ exports.findAll = (req, res) => {
         .catch((err) => {
             res.status(500).send({
                 message: err.message || "Ocurrio un error al obtener las reservas.",
+            });
+        });
+};
+
+//GET reservas por id restaurante
+exports.findByRestaurant = (req, res) => {
+
+    Reservas.findAll({ where: {id_restaurante: req.params.id_restaurante} })
+
+        .then((data) => {
+            res.send(data);
+        })
+
+        .catch((err) => {
+            res.status(500).send({
+                message: err.message || "Ocurrió un error al filtrar las reservas por restaurante.",
+            });
+        });
+};
+
+//GET Available (retorna las mesas ocupadas)
+exports.getMesasNotAvailable = (req, res) => {
+    // var condition = { nombre: { [Op.iLike]: `%${nombreb}%` } } : null;
+    let fecha_query = new Date(req.params.fecha)
+    let inicio = (parseInt(req.params.hora_entrada)+1).toString()
+    Reservas.findAll({
+        where: {
+            id_restaurante: req.params.id_restaurante,
+            [Op.or]:[
+                {hora_entrada: req.params.hora_entrada},
+                {hora_salida:req.params.hora_salida}
+            ],
+            cantidad_lugares: { [Op.gte]: req.params.cantidad_lugares},
+        },
+        attributes: ['id_mesa','fecha']
+    })
+        .then(data => {
+            respuesta=[]
+            data.forEach(elem=>{
+                // console.log("elemento: "+elem.getDataValue("id_mesa"))
+                fecha_db_format = elem.fecha.getFullYear()+"-"+(elem.fecha.getMonth()+1)+"-"+elem.fecha.getDate()
+                fecha_format =  fecha_query.getFullYear()+"-"+(fecha_query.getMonth()+1)+"-"+fecha_query.getDate()
+                if (fecha_format === fecha_db_format){
+                    respuesta.push(elem.getDataValue("id_mesa"));
+                }
+            })
+            res.send(respuesta);
+        })
+        .catch(err => {
+            res.status(500).send({
+                message:
+                    err.message || "Ocurrio un error al obtener los restaurantes."
             });
         });
 };

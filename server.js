@@ -5,7 +5,7 @@ const app = express();
 const db = require("./app/models");
 db.sequelize.sync(); //sincroniza con la DB. Si las tablas no existen las crea
 var corsOptions = {
-    origin: "http://localhost:9091"
+    origin: "*"
 };
 app.use(cors(/*corsOptions*/)); /* desactivado para que permita usar los datos enviados al servidor */
 // parse requests of content-type - application/json

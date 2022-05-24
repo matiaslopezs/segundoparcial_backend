@@ -78,6 +78,22 @@ exports.findAll = (req, res) => {
     });
 };
 
+//GET mesas por id restaurante
+exports.findByRestaurant = (req, res) => {
+
+  Mesas.findAll({ where: {id_restaurante: req.params.id_restaurante} })
+
+      .then((data) => {
+        res.send(data);
+      })
+
+      .catch((err) => {
+        res.status(500).send({
+          message: err.message || "Ocurrió un error al filtrar las mesas por restaurante.",
+        });
+      });
+};
+
 //DELETE mesa por id
 exports.destroy = (req, res) => {
   var id_mesa = req.params.id;
