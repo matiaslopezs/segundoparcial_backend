@@ -48,8 +48,15 @@ exports.findOne = (req, res) => {
 exports.findAll = (req, res) => {
     Reservas.findAll()
 
-        .then((data) => {
-            res.send(data);
+        .then((datos) => {
+            //ordenamientosegun hora_entrada segun id_mesa ordenada
+            datos.sort((a,b)=>{
+                const orden_mesa = a.id_mesa - b.id_mesa;
+                const orden_entrada = a.hora_entrada - b.hora_entrada;
+    
+                return orden_mesa === 0 ? orden_entrada: orden_mesa;
+            })
+            res.send(datos);
         })
 
         .catch((err) => {
@@ -110,6 +117,39 @@ exports.getMesasNotAvailable = (req, res) => {
             });
         });
 };
+
+//GET reservas por restaurante y fecha de reserva
+exports.getReservasRestaurantFecha = (req, res) => {
+    const fecha_query = new Date(req.params.fecha);
+    Reservas.findAll({
+        where: {
+            [Op.and]:[
+            {id_restaurante: req.params.id_restaurante},
+            {fecha: fecha_query}
+            ]
+        },
+        order: [
+            ["id_mesa", "ASC"],
+        ],
+    })
+
+    .then((datos) => {
+        //ordenamiento segun hora_entrada segun id_mesa ordenada
+        datos.sort((a,b)=>{
+            const orden_mesa = a.id_mesa - b.id_mesa;
+            const orden_entrada = a.hora_entrada - b.hora_entrada;
+
+            return orden_mesa === 0 ? orden_entrada: orden_mesa;
+        })
+        res.send(datos);
+    })
+
+    .catch((err) => {
+        res.status(500).send({
+            message: err.message || "Ocurrió un error al filtrar las reservas por restaurante.",
+        });
+    });
+}
 
 //PUT (update)
 exports.update = async(req, res) => {
