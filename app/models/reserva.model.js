@@ -26,10 +26,10 @@ module.exports = (sequelize, Sequelize) => {
         },
         id_cliente: {
           type: Sequelize.BIGINT,
-            // references: {
-            //     model: "Clientes",
-            //     key: "id"
-            // }
+            references: {
+                model: "Clientes",
+                key: "id"
+            }
         },
         cantidad_lugares: {
             type: Sequelize.BIGINT
@@ -48,7 +48,7 @@ module.exports = (sequelize, Sequelize) => {
                 // una mesa puede tener varias reservas (en diferentes horarios).
                 Reserva.belongsTo(models.Restaurantes);
                 Reserva.belongsTo(models.Mesas);
-                // Reserva.belongsTo(models.Clientes);
+                Reserva.belongsTo(models.Clientes);
             },
         },
     });
