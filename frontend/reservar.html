@@ -94,13 +94,26 @@
                 </div>
                 <div class="mb-3">
                     <p>8. Por último ingrese sus datos</p>
+                    <small>Buscar CI:</small>
                     <select @change="cargarcliente()" class="form-select" aria-label="Default select example" v-model.number="ci">
                         <option selected>Elija su cédula</option>
                         <option v-for="cliente in listaclientes" :value="cliente.cedula">{{cliente.cedula}}</option>
                     </select>
-                    <input type="text" v.model.number="ci"  class="form-control" id="input_ci" :value="ci" placeholder="Si no está registrado escriba su CI aquí">
-                    <input type="text" v.model="nombre" class="form-control" id="input_nombre" :value="nombre" placeholder="Nombre">
-                    <input type="text" @click="reservar()" v.model="apellido" class="form-control" id="input_apellido" :value="apellido" placeholder="Apellido">
+                    <br>
+                    <div class="table">
+                        <table class="table table-striped-columns">
+                            <tr>
+                                <th></th><th><small>Cédula</small></th><th><small>Nombre</small></th><th><small>Apellido</small></th>
+                            </tr>
+                            <tr>
+                                <td>Reserva a nombre de: </td><td> {{ci}} </td><td> {{nombre}} </td><td> {{apellido}} </td>
+                            </tr>
+                        </table>
+                    </div>
+                    <small>o registrece:</small>
+                    <input type="text" v-model.number="ci" class="form-control" id="input_ci" placeholder="Si no está registrado escriba su CI aquí">
+                    <input type="text" v-model="nombre" class="form-control" id="input_nombre" placeholder="Nombre">
+                    <input type="text" v-model="apellido" class="form-control" id="input_apellido" placeholder="Apellido">
                     <div v-if="!flagcliente">
                         <small>registrar nuevo cliente:</small>
                         <div class="button" align="center">

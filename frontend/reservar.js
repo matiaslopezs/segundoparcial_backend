@@ -130,30 +130,28 @@ const app = new Vue({
             }
         },
         registrarcliente(){
-            console.log("n: "+this.nombre+" a: "+this.apellido+" ci: "+this.ci)
             let cliente = {
                 nombre: this.nombre,
                 apellido: this.apellido,
                 cedula: this.ci
             };
-            console.log("cliente a añadir"+cliente.nombre);
-            // fetch(URL+"api/cliente/",{
-            //     method: 'POST',
-            //     body:JSON.stringify(cliente),
-            //     headers:{
-            //         'Content-Type': 'application/json'
-            //     }
-            // }).then(response =>{
-            //     if (response.ok){return response.json();
-            //         console.log(response.json())}
-            //     else { throw "Error al crear el cliente"}
-            // })
-            //     .then(data => {
-            //         this.cliente=data;
-            //         console.log("Cliente creado",data)
-            //     })
-            //     .catch(err=>console.log(err))
-            // this.flagcliente = true;
+            fetch(URL+"api/cliente/",{
+                method: 'POST',
+                body:JSON.stringify(cliente),
+                headers:{
+                    'Content-Type': 'application/json'
+                }
+            }).then(response =>{
+                if (response.ok){return response.json();}
+                else { throw "Error al crear el cliente"}
+            })
+                .then(data => {
+                    this.cliente_id=data.id;
+                    console.log("Cliente creado",data)
+                    alert("Cliente creado")
+                })
+                .catch(err=>console.log(err))
+            this.flagcliente = true;
         },
         async reservar() {
             const cliente = await get_cliente_by_ci(this.ci);
@@ -178,7 +176,7 @@ const app = new Vue({
                     else { throw "Error al crear la reserva"}
                 }).then( data => {
                     console.log("Reserva creada")
-                    alert("Reserva realizada con éxito!")
+                    alert("¡Reserva realizada con éxito!")
                     window.location.href="menu.html"
                 }).catch(err=>console.log(err))
             }
