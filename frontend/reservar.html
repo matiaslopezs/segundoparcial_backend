@@ -81,7 +81,7 @@
                 <div class="mb-3">
                     <p>7. Ahora elija una mesa entre las disponibles</p>
                     <div v-if="flagmesas==true">
-                        <select class="form-select" aria-label="Default select example">
+                        <select class="form-select" aria-label="Default select example" v-model.number="mesa_elegida">
                             <option selected>Mesas disponibles</option>
                             <option v-for="mesa in mesasdisponibles" :value="mesa.id">{{mesa.nombre}}, ubicación: {{mesa.coordenada_x}},{{mesa.coordenada_y}}, capacidad: {{mesa.capacidad}}</option>
                         </select>
@@ -94,19 +94,22 @@
                 </div>
                 <div class="mb-3">
                     <p>8. Por último ingrese sus datos</p>
-                    <select class="form-select" aria-label="Default select example">
+                    <select @change="cargarcliente()" class="form-select" aria-label="Default select example" v-model.number="ci">
                         <option selected>Elija su cédula</option>
-                        <option value="1">One</option>
-                        <option value="2">Two</option>
-                        <option value="3">Three</option>
+                        <option v-for="cliente in listaclientes" :value="cliente.cedula">{{cliente.cedula}}</option>
                     </select>
-                    <input type="text" class="form-control" id="ci" placeholder="Si no está registrado escriba su CI aquí">
-                    <input type="text" class="form-control" id="nombre" placeholder="Nombre">
-                    <input type="text" class="form-control" id="apellido" placeholder="Apellido">
+                    <input type="text" class="form-control" id="ci" :value="ci" placeholder="Si no está registrado escriba su CI aquí">
+                    <input type="text" class="form-control" id="nombre" :value="nombre" placeholder="Nombre">
+                    <input type="text" class="form-control" id="apellido":value="apellido" placeholder="Apellido">
                 </div>
                 <div class="mb-3">
-                    <div class="button" align="center">
+                    <div class="button" align="center" v-if="datoscargados() === true">
                         <button @click="reservar()" type="button" class="btn btn-primary">Registrar Reserva</button>
+                    </div>
+                    <div class="text-warning" v-else>
+                        <figure class="text-center">
+                            <h5>¡Complete todos los datos para poder realizar la reserva!</h5>
+                        </figure>
                     </div>
                 </div>
             </div>

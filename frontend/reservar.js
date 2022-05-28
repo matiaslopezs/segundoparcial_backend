@@ -39,8 +39,19 @@ const get_mesas_disponibles=(mesas,mesas_ocupadas)=>{
     return mesas_disp;
 }
 
-const get_cliente = async (cedula_cliente) =>{
+const get_cliente_by_ci = async (cedula_cliente) =>{
     respuesta = await fetch(URL+"api/cliente/ci/"+cedula_cliente)
+    if (respuesta){
+        return respuesta.json()
+    }
+}
+
+async function clientes_get_all() {
+    const res = await fetch(`${URL}api/cliente/`);
+    if(res){
+        const data = res.json();
+        return data;
+    }
 }
 
 const app = new Vue({
@@ -56,6 +67,8 @@ const app = new Vue({
         hora_entrada:0,
         hora_salida:0,
         cantidad_lugares:0,
+        mesa_elegida:null,
+        listaclientes:[],
         ci:null,
         nombre:null,
         apellido:null,
@@ -67,6 +80,8 @@ const app = new Vue({
         beforeCreate: async function(){
             this.restaurantes = await restaurantes_get_all();
             console.log("lista restaurantes:", this.restaurantes);
+            this.listaclientes = await clientes_get_all();
+            console.log("lista clientes:", this.listaclientes);
         },
         checkhora(valor){
             if (valor === 1){
@@ -89,10 +104,25 @@ const app = new Vue({
             this.mesasdisponibles = get_mesas_disponibles(mesastodas,mesasocupadas)
         },
         async cargarcliente(){
-            let cliente = await get_cliente(this.ci);
-            this.nombre = cliente.nombre;
-            this.apellido = cliente.apellido;
+            if (this.ci !== "Elija su cédula"){
+                let cliente = await get_cliente_by_ci(this.ci);
+                // console.log("c: "+cliente[0]+" n: "+cliente[0].nombre+" a: "+cliente[0].apellido)
+                this.nombre = cliente[0].nombre;
+                this.apellido = cliente[0].apellido;
+            }else{
+                this.ci = null;
+                this.nombre = null;
+                this.apellido = null;
+            }
         },
+        datoscargados(){
+            if (this.ci !== null && this.nombre !== null && this.apellido !== null && this.mesa_elegida !== null){
+                return true;
+            }else{
+                return false;
+            }
+        }
     },
 })
+
 
