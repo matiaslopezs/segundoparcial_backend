@@ -123,7 +123,7 @@ const app = new Vue({
             }
         },
         datoscargados(){
-            if (this.ci !== null && this.nombre !== null && this.apellido !== null && this.mesa_elegida !== null){
+            if (this.flagcliente === true && this.mesa_elegida !== null){
                 return true;
             }else{
                 return false;
