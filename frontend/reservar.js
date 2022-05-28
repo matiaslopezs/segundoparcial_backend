@@ -25,14 +25,16 @@ const get_mesas_ocupadas = async (id_restaurante,fecha,hora_entrada,hora_salida,
     }
 }
 
-const get_mesas_disponibles=(mesas,mesas_ocupadas)=>{
+const get_mesas_disponibles=(mesas,mesas_ocupadas, capacidad)=>{
     mesas_disp = []
     mesas.forEach(elemento =>{
-        var mesa = mesas_ocupadas.find( valor =>{
-            return valor === elemento.id
-        })
-        if(!mesa){
-            mesas_disp.push(elemento)
+        if (elemento.capacidad >= capacidad){
+            var mesa = mesas_ocupadas.find( valor =>{
+                return valor === elemento.id
+            })
+            if(!mesa){
+                mesas_disp.push(elemento)
+            }
         }
     });
     console.log("mesas_disponibles: "+mesas_disp)
@@ -103,7 +105,7 @@ const app = new Vue({
             this.hora_salida = parseInt(this.rango_hora.slice(3));
             let mesastodas = await get_all_mesas_by_restaurante(this.restaurante_id)
             let mesasocupadas = await get_mesas_ocupadas(this.restaurante_id, this.fecha, this.hora_entrada, this.hora_salida, this.cantidad_lugares)
-            this.mesasdisponibles = get_mesas_disponibles(mesastodas,mesasocupadas)
+            this.mesasdisponibles = get_mesas_disponibles(mesastodas,mesasocupadas, this.cantidad_lugares)
         },
         async cargarcliente(){
             if (this.ci !== "Elija su cédula"){
