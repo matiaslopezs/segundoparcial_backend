@@ -60,6 +60,7 @@ const app = new Vue({
         restaurantes:[],
         valorcheck: 0,
         flagmesas: false,
+        flagcliente: false,
         mesasdisponibles:[],
         restaurante_id: 0,
         fecha: null,
@@ -67,6 +68,7 @@ const app = new Vue({
         hora_entrada:0,
         hora_salida:0,
         cantidad_lugares:0,
+        cliente_id: null,
         mesa_elegida:null,
         listaclientes:[],
         ci:null,
@@ -109,10 +111,13 @@ const app = new Vue({
                 // console.log("c: "+cliente[0]+" n: "+cliente[0].nombre+" a: "+cliente[0].apellido)
                 this.nombre = cliente[0].nombre;
                 this.apellido = cliente[0].apellido;
+                this.cliente_id = cliente[0].id;
+                this.flagcliente = true;
             }else{
                 this.ci = null;
                 this.nombre = null;
                 this.apellido = null;
+                this.flagcliente = false;
             }
         },
         datoscargados(){
@@ -120,6 +125,60 @@ const app = new Vue({
                 return true;
             }else{
                 return false;
+            }
+        },
+        registrarcliente(){
+            console.log("n: "+this.nombre+" a: "+this.apellido+" ci: "+this.ci)
+            let cliente = {
+                nombre: this.nombre,
+                apellido: this.apellido,
+                cedula: this.ci
+            };
+            console.log("cliente a añadir"+cliente.nombre);
+            // fetch(URL+"api/cliente/",{
+            //     method: 'POST',
+            //     body:JSON.stringify(cliente),
+            //     headers:{
+            //         'Content-Type': 'application/json'
+            //     }
+            // }).then(response =>{
+            //     if (response.ok){return response.json();
+            //         console.log(response.json())}
+            //     else { throw "Error al crear el cliente"}
+            // })
+            //     .then(data => {
+            //         this.cliente=data;
+            //         console.log("Cliente creado",data)
+            //     })
+            //     .catch(err=>console.log(err))
+            // this.flagcliente = true;
+        },
+        async reservar() {
+            const cliente = await get_cliente_by_ci(this.ci);
+            if (cliente !== null){
+                const reserva = {
+                    id_restaurante: this.restaurante_id,
+                    id_mesa: this.mesa_elegida,
+                    fecha: this.fecha,
+                    hora_entrada: this.hora_entrada,
+                    hora_salida: this.hora_salida,
+                    id_cliente: this.cliente_id,
+                    cantidad_lugares: this.cantidad_lugares
+                }
+                fetch(URL+"api/reserva/", {
+                    method: 'POST',
+                    body:JSON.stringify(reserva),
+                    headers:{
+                        'Content-Type': 'application/json'
+                    }
+                }).then(response => {
+                    if (response.ok){return response.json}
+                    else { throw "Error al crear la reserva"}
+                }).then( data => {
+                    console.log("Reserva creada")
+                    alert("Reserva realizada con éxito!")
+                    window.location.href="menu.html"
+                }).catch(err=>console.log(err))
             }
         }
     },

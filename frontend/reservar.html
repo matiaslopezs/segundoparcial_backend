@@ -98,9 +98,15 @@
                         <option selected>Elija su cédula</option>
                         <option v-for="cliente in listaclientes" :value="cliente.cedula">{{cliente.cedula}}</option>
                     </select>
-                    <input type="text" class="form-control" id="ci" :value="ci" placeholder="Si no está registrado escriba su CI aquí">
-                    <input type="text" class="form-control" id="nombre" :value="nombre" placeholder="Nombre">
-                    <input type="text" class="form-control" id="apellido":value="apellido" placeholder="Apellido">
+                    <input type="text" v.model.number="ci"  class="form-control" id="input_ci" :value="ci" placeholder="Si no está registrado escriba su CI aquí">
+                    <input type="text" v.model="nombre" class="form-control" id="input_nombre" :value="nombre" placeholder="Nombre">
+                    <input type="text" @click="reservar()" v.model="apellido" class="form-control" id="input_apellido" :value="apellido" placeholder="Apellido">
+                    <div v-if="!flagcliente">
+                        <small>registrar nuevo cliente:</small>
+                        <div class="button" align="center">
+                            <button @click="registrarcliente()" type="button" class="btn btn-outline-primary btn-sm">Registrar Cliente</button>
+                        </div>
+                    </div>
                 </div>
                 <div class="mb-3">
                     <div class="button" align="center" v-if="datoscargados() === true">
