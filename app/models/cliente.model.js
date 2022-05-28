@@ -31,6 +31,13 @@ module.exports = (sequelize, Sequelize) => {
 
         }
 
+    },
+    {
+        classMethods: {
+            associate: function (models) {
+                Cliente.hasMany(models.Reservas);
+            },
+        },
     });
 
     return Cliente;

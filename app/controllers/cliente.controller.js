@@ -1,6 +1,6 @@
 
 const db = require("../models");
-const Cliente = db.Cliente;
+const Cliente = db.Clientes;
 const Op = db.Sequelize.Op;
 
 exports.create = (req, res) => {
