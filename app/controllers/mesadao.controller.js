@@ -44,7 +44,12 @@ exports.findOne = (req, res) => {
   Mesas.findByPk(id)
 
     .then((data) => {
-      res.send(data);
+      if(data!=null){
+        res.send(data);
+      }else{
+        res.send("El id de la mesa no existe")
+      }
+      
     })
 
     .catch((err) => {
@@ -117,40 +122,46 @@ exports.destroy = (req, res) => {
 
 //PUT mesa por id
 exports.update = (req, res) => {
-  id_mesa = req.body.id;
-  nombre_mesa = req.body.nombre;
-  coordenadaX = req.body.coordenada_x;
-  coordenadaY = req.body.coordenada_y;
-  planta_mesa = req.body.planta;
-  capacidad_mesa = req.body.capacidad;
-  restauranteId = req.body.id_restaurante;
-
-  Mesas.update(
-    {
-      coordenada_x: coordenadaX,
-      coordenada_y: coordenadaY,
-      planta: planta_mesa,
-      capacidad: capacidad_mesa,
-      nombre: nombre_mesa,
-      id_restaurante: restauranteId,
-    },
-    {
-      where: {
-        id: id_mesa,
-      },
-    }
-  )
-    .then((data) => {
-      if (data == 1) {
-        res.send("La mesa se actualizó con exito " + data);
-      } else {
-        res.send("La mesa a actualizar no existe " + data);
-      }
-    })
-
-    .catch((err) => {
-      res.status(500).send({
-        message: err.message || "Ocurrio un error al actualizar la mesa." ,
-      });
+  if (!req.body.id) {
+    res.send({
+      message: "Debe especificar el id de la mesa",
     });
+  } else {
+    id_mesa = req.body.id;
+    nombre_mesa = req.body.nombre;
+    coordenadaX = req.body.coordenada_x;
+    coordenadaY = req.body.coordenada_y;
+    planta_mesa = req.body.planta;
+    capacidad_mesa = req.body.capacidad;
+    restauranteId = req.body.id_restaurante;
+
+    Mesas.update(
+      {
+        coordenada_x: coordenadaX,
+        coordenada_y: coordenadaY,
+        planta: planta_mesa,
+        capacidad: capacidad_mesa,
+        nombre: nombre_mesa,
+        id_restaurante: restauranteId,
+      },
+      {
+        where: {
+          id: id_mesa,
+        },
+      }
+    )
+      .then((data) => {
+        if (data == 1) {
+          res.send("La mesa se actualizó con exito " + data);
+        } else {
+          res.send("La mesa a actualizar no existe " + data);
+        }
+      })
+
+      .catch((err) => {
+        res.status(500).send({
+          message: err.message || "Ocurrio un error al actualizar la mesa.",
+        });
+      });
+  }
 };

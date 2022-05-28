@@ -7,7 +7,7 @@ db.sequelize.sync(); //sincroniza con la DB. Si las tablas no existen las crea
 var corsOptions = {
     origin: "*"
 };
-app.use(cors(corsOptions));
+app.use(cors(/*corsOptions*/)); /* desactivado para que permita usar los datos enviados al servidor */
 // parse requests of content-type - application/json
 app.use(bodyParser.json());
 // parse requests of content-type - application/x-www-form-urlencoded
