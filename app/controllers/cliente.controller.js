@@ -80,7 +80,21 @@ exports.findOne = (req, res) => {
 
 };
 
+//GET cliente por cedula
+exports.findByCi = (req, res) => {
 
+    Cliente.findAll({ where: {cedula: req.params.ci} })
+
+        .then((data) => {
+            res.send(data);
+        })
+
+        .catch((err) => {
+            res.status(500).send({
+                message: err.message || "Ocurrió un error al obtener el cliente por cédula.",
+            });
+        });
+};
 
 exports.findAll = (req, res) => {
 
@@ -110,28 +124,33 @@ exports.findAll = (req, res) => {
 
 };
 
-exports.update = (req, res) => {
-    const id = req.params.id;
-    Cliente.update(req.body, {
-        where: { id: id }
-    })
-        .then(num => {
-            if (num == 1) {
-                res.send({
-                    message: "El cliente fue actualizada exitosamente."
-                });
-            } else {
-                res.send({
-                    message: `No se puede actualizar el cliente con id=${id}. Tal vez el cliente no ha sido encontrado o req.body estaba vacio!`
-                });
-            }
-        })
-        .catch(err => {
-            res.status(500).send({
-                message: "Error actualizando cliente con id=" + id
-            });
+//PUT (update)
+exports.update = async(req, res) => {
+    if (!req.body.id) {
+        res.status(400).send({
+            message: "Debe especificar el id del cliente!"
         });
-};
+    }
+    const id = req.body.id;
+    try {
+        const cliente = await Cliente.findByPk(id);
+        if(!cliente){
+            res.status(404).send({
+                message: "No se encuentra el cliente a modificar"
+            });
+        }else{
+            cliente.nombre = req.body.nombre;
+            cliente.apellido = req.body.apellido;
+            cliente.cedula= req.body.cedula;
+            const data = await cliente.save();
+            res.send(data);
+        }
+    }catch (error){
+        res.status(500).send({
+            message: "No se pudo actualizar al cliente. "+error.message
+        });
+    }
+}
 
 exports.delete = (req, res) => {
     const id = req.params.id;
@@ -139,13 +158,13 @@ exports.delete = (req, res) => {
         where: { id: id }
     })
         .then(num => {
-            if (num == 1) {
+            if (num === 1) {
                 res.send({
-                    message: "El cliente fue eliminado existosamente!"
+                    message: "El cliente fue eliminado exitosamente!"
                 });
             } else {
                 res.send({
-                    message: `No puede borrar el cliente con id=${id}. Tal vez el cliente no fue encontrada!`
+                    message: `No puede borrar el cliente con id=${id}. Tal vez el cliente no fue encontrado!`
                 });
             }
         })

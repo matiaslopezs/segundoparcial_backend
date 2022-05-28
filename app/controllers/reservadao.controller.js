@@ -131,7 +131,7 @@ exports.update = async(req, res) => {
             reserva.fecha= req.body.fecha;
             reserva.hora_entrada= req.body.hora_entrada;
             reserva.hora_salida= req.body.hora_salida;
-            // reserva.id_cliente = req.body.id_cliente;
+            reserva.id_cliente = req.body.id_cliente;
             reserva.cantidad_lugares= req.body.cantidad_lugares;
             const data = await reserva.save();
             res.send(data);

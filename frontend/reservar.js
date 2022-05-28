@@ -39,6 +39,10 @@ const get_mesas_disponibles=(mesas,mesas_ocupadas)=>{
     return mesas_disp;
 }
 
+const get_cliente = async (cedula_cliente) =>{
+    respuesta = await fetch(URL+"api/cliente/ci/"+cedula_cliente)
+}
+
 const app = new Vue({
     el:'#app',
     data:{
@@ -52,6 +56,9 @@ const app = new Vue({
         hora_entrada:0,
         hora_salida:0,
         cantidad_lugares:0,
+        ci:null,
+        nombre:null,
+        apellido:null,
     },
     mounted:function (){
         this.beforeCreate()
@@ -80,7 +87,12 @@ const app = new Vue({
             let mesastodas = await get_all_mesas_by_restaurante(this.restaurante_id)
             let mesasocupadas = await get_mesas_ocupadas(this.restaurante_id, this.fecha, this.hora_entrada, this.hora_salida, this.cantidad_lugares)
             this.mesasdisponibles = get_mesas_disponibles(mesastodas,mesasocupadas)
-        }
+        },
+        async cargarcliente(){
+            let cliente = await get_cliente(this.ci);
+            this.nombre = cliente.nombre;
+            this.apellido = cliente.apellido;
+        },
     },
 })
 
