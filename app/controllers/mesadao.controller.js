@@ -28,6 +28,7 @@ exports.create = (req, res) => {
 
   Mesas.create(mesa)
     .then((data) => {
+      console.log("Mesa creada");
       res.send(data);
     })
     .catch((err) => {
@@ -44,6 +45,7 @@ exports.findOne = (req, res) => {
   Mesas.findByPk(id)
 
     .then((data) => {
+      console.log("GET mesa por id");
       if(data!=null){
         res.send(data);
       }else{
@@ -68,6 +70,7 @@ exports.findAll = (req, res) => {
   Mesas.findAll({ where: condition })
 
     .then((data) => {
+      console.log("GET all mesas o por apoximacion de nombres");
       res.send(data);
     })
 
@@ -84,6 +87,7 @@ exports.findByRestaurant = (req, res) => {
   Mesas.findAll({ where: {id_restaurante: req.params.id_restaurante} })
 
       .then((data) => {
+        console.log("GET mesas por id de restaurante");
         res.send(data);
       })
 
@@ -107,6 +111,7 @@ exports.destroy = (req, res) => {
 
     .then((data) => {
       if (data == 1) {
+        console.log("DELETE mesa por id ");
         res.send("La mesa se eliminó con exito " + data);
       } else {
         res.send("La mesa a eliminar no existe " + data);
@@ -122,6 +127,7 @@ exports.destroy = (req, res) => {
 
 //PUT mesa por id
 exports.update = (req, res) => {
+  console.log(!req.body.id);
   if (!req.body.id) {
     res.send({
       message: "Debe especificar el id de la mesa",
@@ -151,6 +157,7 @@ exports.update = (req, res) => {
       }
     )
       .then((data) => {
+        console.log("UPDATE de una mesa por id");
         if (data == 1) {
           res.send("La mesa se actualizó con exito " + data);
         } else {
