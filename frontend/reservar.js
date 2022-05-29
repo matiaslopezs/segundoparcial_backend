@@ -25,14 +25,16 @@ const get_mesas_ocupadas = async (id_restaurante,fecha,hora_entrada,hora_salida,
     }
 }
 
-const get_mesas_disponibles=(mesas,mesas_ocupadas)=>{
+const get_mesas_disponibles=(mesas,mesas_ocupadas, capacidad)=>{
     mesas_disp = []
     mesas.forEach(elemento =>{
-        var mesa = mesas_ocupadas.find( valor =>{
-            return valor === elemento.id
-        })
-        if(!mesa){
-            mesas_disp.push(elemento)
+        if (elemento.capacidad >= capacidad){
+            var mesa = mesas_ocupadas.find( valor =>{
+                return valor === elemento.id
+            })
+            if(!mesa){
+                mesas_disp.push(elemento)
+            }
         }
     });
     console.log("mesas_disponibles: "+mesas_disp)
@@ -60,6 +62,7 @@ const app = new Vue({
         restaurantes:[],
         valorcheck: 0,
         flagmesas: false,
+        flagcliente: false,
         mesasdisponibles:[],
         restaurante_id: 0,
         fecha: null,
@@ -67,6 +70,7 @@ const app = new Vue({
         hora_entrada:0,
         hora_salida:0,
         cantidad_lugares:0,
+        cliente_id: null,
         mesa_elegida:null,
         listaclientes:[],
         ci:null,
@@ -101,7 +105,7 @@ const app = new Vue({
             this.hora_salida = parseInt(this.rango_hora.slice(3));
             let mesastodas = await get_all_mesas_by_restaurante(this.restaurante_id)
             let mesasocupadas = await get_mesas_ocupadas(this.restaurante_id, this.fecha, this.hora_entrada, this.hora_salida, this.cantidad_lugares)
-            this.mesasdisponibles = get_mesas_disponibles(mesastodas,mesasocupadas)
+            this.mesasdisponibles = get_mesas_disponibles(mesastodas,mesasocupadas, this.cantidad_lugares)
         },
         async cargarcliente(){
             if (this.ci !== "Elija su cédula"){
@@ -109,17 +113,72 @@ const app = new Vue({
                 // console.log("c: "+cliente[0]+" n: "+cliente[0].nombre+" a: "+cliente[0].apellido)
                 this.nombre = cliente[0].nombre;
                 this.apellido = cliente[0].apellido;
+                this.cliente_id = cliente[0].id;
+                this.flagcliente = true;
             }else{
                 this.ci = null;
                 this.nombre = null;
                 this.apellido = null;
+                this.flagcliente = false;
             }
         },
         datoscargados(){
-            if (this.ci !== null && this.nombre !== null && this.apellido !== null && this.mesa_elegida !== null){
+            if (this.flagcliente === true && this.mesa_elegida !== null){
                 return true;
             }else{
                 return false;
+            }
+        },
+        registrarcliente(){
+            let cliente = {
+                nombre: this.nombre,
+                apellido: this.apellido,
+                cedula: this.ci
+            };
+            fetch(URL+"api/cliente/",{
+                method: 'POST',
+                body:JSON.stringify(cliente),
+                headers:{
+                    'Content-Type': 'application/json'
+                }
+            }).then(response =>{
+                if (response.ok){return response.json();}
+                else { throw "Error al crear el cliente"}
+            })
+                .then(data => {
+                    this.cliente_id=data.id;
+                    console.log("Cliente creado",data)
+                    alert("Cliente creado")
+                })
+                .catch(err=>console.log(err))
+            this.flagcliente = true;
+        },
+        async reservar() {
+            const cliente = await get_cliente_by_ci(this.ci);
+            if (cliente !== null){
+                const reserva = {
+                    id_restaurante: this.restaurante_id,
+                    id_mesa: this.mesa_elegida,
+                    fecha: this.fecha,
+                    hora_entrada: this.hora_entrada,
+                    hora_salida: this.hora_salida,
+                    id_cliente: this.cliente_id,
+                    cantidad_lugares: this.cantidad_lugares
+                }
+                fetch(URL+"api/reserva/", {
+                    method: 'POST',
+                    body:JSON.stringify(reserva),
+                    headers:{
+                        'Content-Type': 'application/json'
+                    }
+                }).then(response => {
+                    if (response.ok){return response.json}
+                    else { throw "Error al crear la reserva"}
+                }).then( data => {
+                    console.log("Reserva creada")
+                    alert("¡Reserva realizada con éxito!")
+                    window.location.href="menu.html"
+                }).catch(err=>console.log(err))
             }
         }
     },
