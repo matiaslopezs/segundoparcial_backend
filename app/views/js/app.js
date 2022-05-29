@@ -1,3 +1,4 @@
+const URL = 'http://localhost:9090/api';
 
 function mostrarRestaurantes(){
     console.log("mostrar Restaurantes...");
@@ -23,7 +24,7 @@ function mostrarRestaurantes(){
     console.log("Existe valor fecha: "+urlParams.has('fecha')); 
     console.log("Existe valor cliente: "+urlParams.has('cliente')); 
 
-    if(!urlParams.has('restaurante') && !urlParams.has('fecha')){
+    if(!urlParams.has('restaurante') && !urlParams.has('fecha') && !urlParams.has('cliente')){ //obtengo todas las reservas
         fetch("http://localhost:9090/api/reserva")
         .then((response)=>response.json())
         .then((Restaurantes)=>{
@@ -31,47 +32,51 @@ function mostrarRestaurantes(){
             console.log(Restaurantes);
             generarTabla(Restaurantes);
         })
-    }else{ //filtrar
-        if(cliente != ""){ //cliente fue cargado para filtrar
-            console.log("El cliente se cargó para filtrar");
-            fetch("http://localhost:9090/api/reserva/filtro/"+restaurante+"/"+fecha)
-                .then((response)=>response.json())
-                .then((restaurantes)=>{
-                    //retorna la lista de reservas por restaurante y fecha
-                    const restaurantesPorCliente = [];
-                    for(let r of restaurantes){
-                        if(r.id_cliente == cliente){
-                            restaurantesPorCliente.push(r);
-                        }
-                    }
-                    if(restaurantesPorCliente.length>0){
-                        console.log(restaurantesPorCliente);
-                    }else{
-                        console.log("No hay coincidencias para el filtro");
-                    }
-                    generarTabla(restaurantesPorCliente);
-                })
-        }else{ //el cliente no fue cargado para filtrar
-            console.log("el cliente no se cargo para filtrar");
-            //filtra por id_restaurante
-            fetch("http://localhost:9090/api/reserva/filtro/"+restaurante+"/"+fecha)
-                .then((response)=>response.json())
-                .then((restaurantes)=>{
-                    //retorna la lista de reservas por restaurante y fecha
-                    if(restaurantes.length>0){
-                        console.log(restaurantes);
-                    }else{
-                        console.log("No hay coincidencias para el filtro");
-                    }
-                    generarTabla(restaurantes);
-                })
-
+    }else{
+        if(restaurante != "" && fecha != "" && cliente != "" ){
+            const direccion = URL + "/reserva/ryfyc/"+restaurante+"/"+fecha+"/"+cliente;
+            console.log(direccion);
+            traerDatos(direccion);
+        }else if(restaurante != "" && fecha != "" && cliente == "" ){
+            const direccion = URL + "/reserva/ryf/"+restaurante+"/"+fecha;
+            console.log(direccion);
+            traerDatos(direccion);
+        }else if( restaurante != "" && fecha == "" && cliente != ""){
+            const direccion = URL + "/reserva/ryc/"+restaurante+"/"+cliente;
+            console.log(direccion);
+            traerDatos(direccion);
+        }else if( restaurante == "" && fecha != "" && cliente != ""){
+            const direccion = URL + "/reserva/cyf/"+cliente+"/"+fecha;
+            console.log(direccion);
+            traerDatos(direccion);
+        }else if(restaurante != "" && fecha == "" && cliente == ""){
+            const direccion = URL + "/reserva/restaurantes/"+restaurante;
+            console.log(direccion);
+            traerDatos(direccion);
+        }else if(restaurante == "" && fecha != "" && cliente == ""){
+            const direccion = URL + "/reserva/fechas/"+fecha;
+            console.log(direccion);
+            traerDatos(direccion);
+        }else if(restaurante == "" && fecha == "" && cliente != ""){
+            const direccion = URL + "/reserva/clientes/"+cliente;
+            console.log(direccion);
+            traerDatos(direccion);
         }
     }
-
     
 }
 mostrarRestaurantes();
+
+function traerDatos(url){
+        fetch(url)
+        .then((response)=>response.json())
+        .then((datos)=>{
+            //retorna la lista de todos los restaurantes
+            console.log(datos);
+            generarTabla(datos);
+        }) 
+      
+}
 
 function generarTabla(datos){
     let tablaRestaurantes = document.querySelector('#tabla-reserva tbody');
@@ -92,3 +97,4 @@ function generarTabla(datos){
 
 
 
+s
