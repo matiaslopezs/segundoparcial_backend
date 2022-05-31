@@ -71,8 +71,64 @@ exports.findByRestaurant = (req, res) => {
 
     Reservas.findAll({ where: {id_restaurante: req.params.id_restaurante} })
 
-        .then((data) => {
-            res.send(data);
+        .then((datos) => {
+                //ordenamiento segun hora_entrada segun id_mesa ordenada
+            datos.sort((a,b)=>{
+                const orden_mesa = a.id_mesa - b.id_mesa;
+                const orden_entrada = a.hora_entrada - b.hora_entrada;
+
+                return orden_mesa === 0 ? orden_entrada: orden_mesa;
+            })
+            console.log("GET reservas por id restaurante");
+            res.send(datos);
+        })
+
+        .catch((err) => {
+            res.status(500).send({
+                message: err.message || "Ocurrió un error al filtrar las reservas por restaurante.",
+            });
+        });
+};
+
+//GET reservas por id cliente
+exports.findByCliente = (req, res) => {
+
+    Reservas.findAll({ where: {id_cliente: req.params.id_cliente} })
+
+        .then((datos) => {
+                //ordenamiento segun hora_entrada segun id_mesa ordenada
+            datos.sort((a,b)=>{
+                const orden_mesa = a.id_mesa - b.id_mesa;
+                const orden_entrada = a.hora_entrada - b.hora_entrada;
+
+                return orden_mesa === 0 ? orden_entrada: orden_mesa;
+            })
+            console.log("GET reservas por id cliente");
+            res.send(datos);
+        })
+
+        .catch((err) => {
+            res.status(500).send({
+                message: err.message || "Ocurrió un error al filtrar las reservas por restaurante.",
+            });
+        });
+};
+
+//GET reservas por fecha
+exports.findByFecha = (req, res) => {
+    const fecha_query = new Date(req.params.fecha);
+    Reservas.findAll({ where: {fecha: fecha_query} })
+    
+        .then((datos) => {
+                //ordenamiento segun hora_entrada segun id_mesa ordenada
+            datos.sort((a,b)=>{
+                const orden_mesa = a.id_mesa - b.id_mesa;
+                const orden_entrada = a.hora_entrada - b.hora_entrada;
+
+                return orden_mesa === 0 ? orden_entrada: orden_mesa;
+            })
+            console.log("GET reservas por fecha");
+            res.send(datos);
         })
 
         .catch((err) => {
@@ -141,6 +197,109 @@ exports.getReservasRestaurantFecha = (req, res) => {
 
             return orden_mesa === 0 ? orden_entrada: orden_mesa;
         })
+        console.log("GET reservas por restaurante y fecha de reserva");
+        res.send(datos);
+    })
+
+    .catch((err) => {
+        res.status(500).send({
+            message: err.message || "Ocurrió un error al filtrar las reservas por restaurante.",
+        });
+    });
+}
+
+//GET reservas por restaurante, fecha de reserva y cliente
+exports.getReservasRestaurantFechaCliente = (req, res) => {
+    const fecha_query = new Date(req.params.fecha);
+    Reservas.findAll({
+        where: {
+            [Op.and]:[
+            {id_restaurante: req.params.id_restaurante},
+            {fecha: fecha_query},
+            {id_cliente: req.params.id_cliente}
+            ]
+        },
+        order: [
+            ["id_mesa", "ASC"],
+        ],
+    })
+
+    .then((datos) => {
+        //ordenamiento segun hora_entrada segun id_mesa ordenada
+        datos.sort((a,b)=>{
+            const orden_mesa = a.id_mesa - b.id_mesa;
+            const orden_entrada = a.hora_entrada - b.hora_entrada;
+
+            return orden_mesa === 0 ? orden_entrada: orden_mesa;
+        })
+        console.log("GET reservas por restaurante, fecha de reserva y cliente");
+        res.send(datos);
+    })
+
+    .catch((err) => {
+        res.status(500).send({
+            message: err.message || "Ocurrió un error al filtrar las reservas por restaurante.",
+        });
+    });
+}
+
+//GET reservas por fecha de reserva y cliente
+exports.getReservasFechaCliente = (req, res) => {
+    const fecha_query = new Date(req.params.fecha);
+    Reservas.findAll({
+        where: {
+            [Op.and]:[
+            {id_cliente: req.params.id_cliente},
+            {fecha: fecha_query}
+            ]
+        },
+        order: [
+            ["id_mesa", "ASC"],
+        ],
+    })
+
+    .then((datos) => {
+        //ordenamiento segun hora_entrada segun id_mesa ordenada
+        datos.sort((a,b)=>{
+            const orden_mesa = a.id_mesa - b.id_mesa;
+            const orden_entrada = a.hora_entrada - b.hora_entrada;
+
+            return orden_mesa === 0 ? orden_entrada: orden_mesa;
+        })
+        console.log("//GET reservas por fecha de reserva y cliente");
+        res.send(datos);
+    })
+
+    .catch((err) => {
+        res.status(500).send({
+            message: err.message || "Ocurrió un error al filtrar las reservas por restaurante.",
+        });
+    });
+}
+
+//GET reservas por restaurante y cliente
+exports.getReservasRestaurantCliente = (req, res) => {
+    Reservas.findAll({
+        where: {
+            [Op.and]:[
+            {id_restaurante: req.params.id_restaurante},
+            {id_cliente: req.params.id_cliente}
+            ]
+        },
+        order: [
+            ["id_mesa", "ASC"],
+        ],
+    })
+
+    .then((datos) => {
+        //ordenamiento segun hora_entrada segun id_mesa ordenada
+        datos.sort((a,b)=>{
+            const orden_mesa = a.id_mesa - b.id_mesa;
+            const orden_entrada = a.hora_entrada - b.hora_entrada;
+
+            return orden_mesa === 0 ? orden_entrada: orden_mesa;
+        })
+        console.log("GET reservas por restaurante y cliente");
         res.send(datos);
     })
 
