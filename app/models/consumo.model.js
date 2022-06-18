@@ -40,6 +40,7 @@ module.exports = (sequelize, Sequelize) => {
                     // Un cliente puede tener varios consumos
                     Consumo.belongsTo(models.Mesas);
                     Consumo.belongsTo(models.Clientes);
+                    Consumo.hasMany(models.Detalles);
                 },
             },
         });
