@@ -27,7 +27,7 @@ module.exports = (sequelize, Sequelize) => {
         {
             classMethods: {
                 associate: function (models) {
-                    Detalle.belongsTo(models.Mesas);
+                    Detalle.belongsTo(models.Consumos);
                 },
             },
         });
