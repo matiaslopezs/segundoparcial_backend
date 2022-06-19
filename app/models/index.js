@@ -18,4 +18,5 @@ db.Restaurantes = require("./restaurante.model.js")(sequelize, Sequelize);
 db.Mesas = require("./mesa.model.js")(sequelize, Sequelize);
 db.Reservas = require("./reserva.model.js")(sequelize, Sequelize);
 db.Clientes = require("./cliente.model.js")(sequelize, Sequelize);
+db.Categoria_productos = require("./categoria_producto.model.js")(sequelize, Sequelize);
 module.exports = db;
