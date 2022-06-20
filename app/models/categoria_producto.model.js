@@ -11,7 +11,14 @@ module.exports = (sequelize, Sequelize) => {
         autoIncrement: true,
       },
     },
-
+        {
+            classMethods: {
+                associate: function (models) {
+                    // un producto puede perternecer a una categoria  1:1
+                   Categoria_producto.hasOne(models.AdministraciondeProductos);
+                },
+            },
+        }
 
 
         );
