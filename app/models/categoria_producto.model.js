@@ -1,3 +1,4 @@
+const { Categoria_producto } = require("./index.js");
 module.exports = (sequelize, Sequelize) => {
     const Categoria_producto = sequelize.define("Categoria_producto", {
       nombre: {
@@ -9,7 +10,11 @@ module.exports = (sequelize, Sequelize) => {
         primaryKey: true,
         autoIncrement: true,
       },
-    });
+    },
+
+
+
+        );
     return Categoria_producto;
   };
   
