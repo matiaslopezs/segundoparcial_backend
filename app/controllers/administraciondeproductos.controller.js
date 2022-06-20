@@ -110,7 +110,6 @@ exports.findAll = (req, res) => {
         });
 
 };
-
 exports.update = (req, res) => {
     const id = req.params.id;
     AdministraciondeProductos.update(req.body, {
@@ -119,20 +118,22 @@ exports.update = (req, res) => {
         .then(num => {
             if (num == 1) {
                 res.send({
-                    message: "El cliente fue actualizada exitosamente."
+                    message: "Fue actualizada exitosamente."
                 });
             } else {
                 res.send({
-                    message: `No se puede actualizar el cliente con id=${id}. Tal vez el cliente no ha sido encontrado o req.body estaba vacio!`
+                    message: `No se puede actualizar el producto con id=${id}. Tal vez el cliente no ha sido encontrado o req.body estaba vacio!`
                 });
             }
         })
         .catch(err => {
             res.status(500).send({
-                message: "Error actualizando cliente con id=" + id
+                message: "Error actualizando producto con id=" + id
             });
         });
 };
+
+
 
 exports.delete = (req, res) => {
     const id = req.params.id;
