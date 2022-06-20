@@ -25,6 +25,8 @@ require("./app/routes/reserva.routes.js")(app);
 require("./app/routes/cliente.routes.js")(app);
 require("./app/routes/consumo.routes.js")(app);
 require("./app/routes/detalleconsumo.routes.js")(app);
+require("./app/routes/categoria_producto.routes.js")(app);
+
 app.listen(PORT, () => {
     console.log('Servidor corriendo en puerto 9090.');
 });
