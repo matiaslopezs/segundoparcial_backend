@@ -60,6 +60,7 @@ module.exports = (sequelize, Sequelize) => {
           // con la clave externa definida en el modelo fuente ( Mesa).
           Mesa.belongsTo(models.Restaurantes);
           Mesa.hasMany(models.Reservas);
+          Mesa.hasMany(models.Consumos);
         },
       },
     }
