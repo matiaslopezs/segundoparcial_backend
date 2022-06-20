@@ -71,6 +71,27 @@ exports.findByCliente = (req, res) => {
         });
 };
 
+
+//GET consumos por id cliente
+exports.findConsumoActivoByMesa = (req, res) => {
+
+    Consumos.findAll({ where: {
+        [Op.and]:[
+            {id_mesa: req.params.id_mesa},
+            {estado: "abierto"}
+    ]}})
+
+        .then((datos) => {
+            console.log("GET consumos activos por id mesa");
+            res.send(datos);
+        })
+        .catch((err) => {
+            res.status(500).send({
+                message: err.message || "Ocurrió un error al filtrar los consumos activos por id de la mesa.",
+            });
+        });
+};
+
 //PUT (update)
 exports.update = async(req, res) => {
     if (!req.body.id) {
