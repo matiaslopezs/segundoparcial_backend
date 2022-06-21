@@ -37,9 +37,9 @@
                 <br>
                 <div v-if="consumo">
                     <div class="text">
-                        <p><b>Estado:</b> {{consumo.estado}}</p>
+                        <p><b>Estado:</b> {{consumo.estado}}   <button type="button" class="btn btn-outline-primary btn-sm" @click="cerrar_consumicion()">Cerrar Consumición</button></p>
                         <p v-if="cliente_actual"><b>Cliente:</b> {{cliente_actual.nombre}} {{cliente_actual.apellido}}
-                            <b>CI:</b>{{cliente_actual.cedula}}   <button type="button" class="btn btn-primary btn-sm" @click="cambiar_cliente()">Cambiar Cliente</button>
+                            <b>CI:</b>{{cliente_actual.cedula}}   <button type="button" class="btn btn-outline-primary btn-sm" @click="cambiar_cliente()">Cambiar Cliente</button>
                         </p>
                         <div v-if="band_cliente">
                             <div class="mb-3">

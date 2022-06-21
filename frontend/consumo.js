@@ -89,6 +89,25 @@ async function update_total_in_consumo(id_consumo,total) {
     }
 }
 
+async function update_estado_in_consumo(id_consumo) {
+    try{
+        const request = await fetch(URL + "api/consumo/",{
+            method: 'PUT',
+            body:JSON.stringify({
+                id: id_consumo,
+                estado: "cerrado"
+            }),
+            headers:{
+                'Content-Type': 'application/json'
+            }
+        });
+        return await request.json();
+    }catch (error){
+        console.error('Error actualizando el total del consumo');
+        console.error(error);
+    }
+}
+
 async function productos_get_all() {
     const res = await fetch(`${URL}api/administraciondeproductos/`);
     if(res){
@@ -273,6 +292,10 @@ const app = new Vue({
                 }
             );
             return precio
+        },
+        async cerrar_consumicion(){
+            print()
+            await update_estado_in_consumo(this.consumo.id)
         }
     },
 })
