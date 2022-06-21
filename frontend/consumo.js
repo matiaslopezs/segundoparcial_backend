@@ -181,6 +181,7 @@ const app = new Vue({
                 let lista_consumo = await get_consumo_by_id_mesa(this.id_mesa);
                 this.consumo = lista_consumo[0]
                 if(this.consumo){
+                    this.band_consumo = false;
                     console.log("consumo de la mesa: ",this.consumo)
                     // si tenemos el consumo recuperamos sus detalles y el cliente titular
                     this.detalles_consumo = await get_detalles_consumo(this.consumo.id);
@@ -266,10 +267,10 @@ const app = new Vue({
                 console.error("Error al agregar el producto al consumo");
                 console.error(error);
             }
-            // console.log("precio ",this.get_precio_producto(this.id_producto))
-            // total = this.consumo.total + this.get_precio_producto(this.id_producto)*this.cantidad
-            // console.log("total ",total)
-            // await update_total_in_consumo(this.consumo.id, total)
+            console.log("precio ",this.get_precio_producto(String(this.id_producto)))
+            total = parseInt(this.consumo.total) + this.get_precio_producto(String(this.id_producto))*this.cantidad
+            console.log("total ",total)
+            await update_total_in_consumo(this.consumo.id, total)
         },
         get_nombre_producto(producto_id) {
             let nombre;
@@ -283,7 +284,7 @@ const app = new Vue({
             return nombre
         },
         get_precio_producto(producto_id) {
-            let precio;
+            let precio = -1
             this.productos.forEach(
                 (producto)=>{
                     if (producto.id === producto_id){
@@ -291,7 +292,7 @@ const app = new Vue({
                     }
                 }
             );
-            return precio
+            return parseInt(precio)
         },
         async cerrar_consumicion(){
             print()
