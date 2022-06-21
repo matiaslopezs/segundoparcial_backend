@@ -79,7 +79,7 @@
                             </div>
 
                         </div>
-                        <p><b>Total Actual:</b> {{consumo.total}}</p>
+                        <p><b>Total Actual:</b> {{consumo.total}} Gs.</p>
                     </div>
                     <div class="table" v-if="detalles_consumo">
                         <p><b>Detalles de Consumo:</b></p>
@@ -88,9 +88,25 @@
                                 <th><small>Producto</small></th><th><small>Cantidad</small></th><th><small>Precio</small></th>
                             </tr>
                             <tr v-for="detalle in detalles_consumo">
-                                <td> {{detalle.id_producto}} </td><td> {{detalle.cantidad}} </td><td> 10000 </td>
+                                <td> {{get_nombre_producto(detalle.id_producto)}} </td><td> {{detalle.cantidad}} </td><td> {{get_precio_producto(detalle.id_producto)}} Gs. </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <select class="form-select" aria-label="Default select example" id="seleccionarProducto" v-model.number="id_producto">
+                                        <option selected>Nuevo Producto</option>
+                                        <option v-for="producto in productos" :value="producto.id">{{producto.nombre_del_producto}} ({{producto.precio_de_venta}} Gs.)</option>
+                                    </select>
+                                </td>
+                                <td>
+                                    <input type="text" v-model.number="cantidad" class="form-control" id="cantidad" placeholder="Cantidad">
+                                </td>
+                                <td> </td>
+
                             </tr>
                         </table>
+                    </div>
+                    <div class="button" align="center">
+                        <button @click="agregar_producto()" type="button" class="btn btn-outline-primary btn-sm">Agregar Producto</button>
                     </div>
                 </div>
 
