@@ -97,6 +97,25 @@ async function productos_get_all() {
     }
 }
 
+async function post_nuevo_consumo(id_mesa,cliente_id){
+    try{
+        const req = await fetch(URL + "api/consumo/", {
+            method: 'POST',
+            body: JSON.stringify({
+                id_mesa: id_mesa,
+                id_cliente: cliente_id
+            }),
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        });
+        alert("Mesa Abierta")
+    } catch (error) {
+        console.error("Error al crear el consumo");
+        console.error(error);
+    }
+}
+
 const app = new Vue({
     el:'#app',
     data:{
@@ -117,6 +136,7 @@ const app = new Vue({
         cantidad: null,
         productos: [],
         id_producto: 0,
+        band_consumo: false
     },
     mounted:function () {
         this.beforeCreate()
@@ -136,14 +156,17 @@ const app = new Vue({
             }
         },
         async obtener_consumo_by_mesa(){
+            this.band_consumo = true;
             if (this.id_mesa !== 0){
                 console.log("id de la mesa ", this.id_mesa)
                 let lista_consumo = await get_consumo_by_id_mesa(this.id_mesa);
                 this.consumo = lista_consumo[0]
-                console.log("consumo de la mesa: ",this.consumo)
-                // si tenemos el consumo recuperamos sus detalles y el cliente titular
-                this.detalles_consumo = await get_detalles_consumo(this.consumo.id);
-                this.cliente_actual = await get_cliente_by_id(this.consumo.id_cliente);
+                if(this.consumo){
+                    console.log("consumo de la mesa: ",this.consumo)
+                    // si tenemos el consumo recuperamos sus detalles y el cliente titular
+                    this.detalles_consumo = await get_detalles_consumo(this.consumo.id);
+                    this.cliente_actual = await get_cliente_by_id(this.consumo.id_cliente);
+                }
             }
         },
         cambiar_cliente(){
@@ -179,18 +202,28 @@ const app = new Vue({
                 });
                 alert("Cliente creado")
                 this.cliente_actual = await req.json();
-                return data;
+                // return data;
             } catch (error) {
                 console.error("Error al crear el cliente");
                 console.error(error);
             }
             this.flagcliente = true;
             this.band_cliente = false;
-            console.log(await update_cliente_in_consumo(this.consumo.id, this.cliente_actual.id));
+            if (this.band_consumo){
+                await post_nuevo_consumo(this.id_mesa,this.cliente_actual.id)
+                this.band_consumo = false;
+            }else{
+                console.log(await update_cliente_in_consumo(this.consumo.id, this.cliente_actual.id));
+            }
         },
         async actualizar_cliente() {
             this.band_cliente = false;
-            console.log(await update_cliente_in_consumo(this.consumo.id,this.cliente_id));
+            if (this.band_consumo){
+                await post_nuevo_consumo(this.id_mesa,this.cliente_id)
+                this.band_consumo = false;
+            }else{
+                console.log(await update_cliente_in_consumo(this.consumo.id,this.cliente_id));
+            }
             this.cliente_actual = await get_cliente_by_id(this.cliente_id);
         },
         async agregar_producto(){
