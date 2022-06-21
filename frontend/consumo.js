@@ -235,6 +235,8 @@ const app = new Vue({
             }else{
                 console.log(await update_cliente_in_consumo(this.consumo.id, this.cliente_actual.id));
             }
+            // actualizamos la página
+            await this.obtener_consumo_by_mesa()
         },
         async actualizar_cliente() {
             this.band_cliente = false;
@@ -245,6 +247,8 @@ const app = new Vue({
                 console.log(await update_cliente_in_consumo(this.consumo.id,this.cliente_id));
             }
             this.cliente_actual = await get_cliente_by_id(this.cliente_id);
+            // actualizamos la página
+            await this.obtener_consumo_by_mesa()
         },
         async agregar_producto(){
             let nuevo_detalle = {
@@ -262,7 +266,6 @@ const app = new Vue({
                     }
                 });
                 console.log("detalle consumo creado")
-                // await this.obtener_consumo_by_mesa()
             } catch (error) {
                 console.error("Error al agregar el producto al consumo");
                 console.error(error);
@@ -271,6 +274,8 @@ const app = new Vue({
             total = parseInt(this.consumo.total) + this.get_precio_producto(String(this.id_producto))*this.cantidad
             console.log("total ",total)
             await update_total_in_consumo(this.consumo.id, total)
+            // actualizamos la página
+            await this.obtener_consumo_by_mesa()
         },
         get_nombre_producto(producto_id) {
             let nombre;
@@ -297,6 +302,8 @@ const app = new Vue({
         async cerrar_consumicion(){
             print()
             await update_estado_in_consumo(this.consumo.id)
+            // actualizamos la página
+            await this.obtener_consumo_by_mesa()
         }
     },
 })
