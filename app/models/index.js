@@ -21,4 +21,5 @@ db.Clientes = require("./cliente.model.js")(sequelize, Sequelize);
 db.Consumos = require("./consumo.model.js")(sequelize, Sequelize);
 db.Detalles = require("./detalleconsumo.model.js")(sequelize, Sequelize);
 db.Categoria_productos = require("./categoria_producto.model.js")(sequelize, Sequelize);
+db.AdministraciondeProductos = require("./administraciondeproductos.model")(sequelize, Sequelize);
 module.exports = db;
