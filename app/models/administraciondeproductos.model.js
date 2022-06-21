@@ -40,6 +40,7 @@ module.exports =  (sequelize, Sequelize) => {
                 associate: function (models) {
                     // un producto puede perternecer a una categoria  1:1
                     AdministraciondeProductos.belongsTo(models.Categoria_productos);
+                    AdministraciondeProductos.hasMany(models.Detalles);
                 },
             },
         }

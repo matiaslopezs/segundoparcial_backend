@@ -70,6 +70,33 @@ async function update_cliente_in_consumo(id_consumo,id_cliente) {
     }
 }
 
+async function update_total_in_consumo(id_consumo,total) {
+    try{
+        const request = await fetch(URL + "api/consumo/",{
+            method: 'PUT',
+            body:JSON.stringify({
+                id: id_consumo,
+                total: total
+            }),
+            headers:{
+                'Content-Type': 'application/json'
+            }
+        });
+        return await request.json();
+    }catch (error){
+        console.error('Error actualizando el total del consumo');
+        console.error(error);
+    }
+}
+
+async function productos_get_all() {
+    const res = await fetch(`${URL}api/administraciondeproductos/`);
+    if(res){
+        const data = res.json();
+        return data;
+    }
+}
+
 const app = new Vue({
     el:'#app',
     data:{
@@ -87,6 +114,9 @@ const app = new Vue({
         nombre:null,
         apellido:null,
         flagcliente: false,
+        cantidad: null,
+        productos: [],
+        id_producto: 0,
     },
     mounted:function () {
         this.beforeCreate()
@@ -97,6 +127,8 @@ const app = new Vue({
             console.log("lista restaurantes:", this.restaurantes);
             this.listaclientes = await clientes_get_all();
             console.log("lista clientes:", this.listaclientes);
+            this.productos = await productos_get_all();
+            console.log("lista de productos:", this.productos);
         },
         async obtener_mesas(){
             if (this.restaurante_id !== 0){
@@ -160,6 +192,54 @@ const app = new Vue({
             this.band_cliente = false;
             console.log(await update_cliente_in_consumo(this.consumo.id,this.cliente_id));
             this.cliente_actual = await get_cliente_by_id(this.cliente_id);
+        },
+        async agregar_producto(){
+            let nuevo_detalle = {
+                id_consumo: this.consumo.id,
+                id_producto: this.id_producto,
+                cantidad: this.cantidad
+            };
+            let total;
+            try {
+                const request = await fetch(URL + "api/detalleconsumo", {
+                    method: 'POST',
+                    body: JSON.stringify(nuevo_detalle),
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }
+                });
+                console.log("detalle consumo creado")
+                // await this.obtener_consumo_by_mesa()
+            } catch (error) {
+                console.error("Error al agregar el producto al consumo");
+                console.error(error);
+            }
+            // console.log("precio ",this.get_precio_producto(this.id_producto))
+            // total = this.consumo.total + this.get_precio_producto(this.id_producto)*this.cantidad
+            // console.log("total ",total)
+            // await update_total_in_consumo(this.consumo.id, total)
+        },
+        get_nombre_producto(producto_id) {
+            let nombre;
+            this.productos.forEach(
+                (producto)=>{
+                    if (producto.id === producto_id){
+                        nombre = producto.nombre_del_producto
+                    }
+                }
+            );
+            return nombre
+        },
+        get_precio_producto(producto_id) {
+            let precio;
+            this.productos.forEach(
+                (producto)=>{
+                    if (producto.id === producto_id){
+                        precio = producto.precio_de_venta
+                    }
+                }
+            );
+            return precio
         }
     },
 })

@@ -10,10 +10,10 @@ module.exports = (sequelize, Sequelize) => {
             },
             id_producto: {
                 type: Sequelize.BIGINT,
-                // references: {
-                //     model: "Productos",
-                //     key: "id"
-                // }
+                references: {
+                    model: "AdministraciondeProductos",
+                    key: "id"
+                }
             },
             cantidad: {
                 type: Sequelize.BIGINT
@@ -28,6 +28,7 @@ module.exports = (sequelize, Sequelize) => {
             classMethods: {
                 associate: function (models) {
                     Detalle.belongsTo(models.Consumos);
+                    Detalle.belongsTo(models.AdministraciondeProductos);
                 },
             },
         });
