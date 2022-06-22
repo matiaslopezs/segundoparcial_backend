@@ -4,7 +4,7 @@ module.exports = (app) => {
   router.post("/", cat_producto.create);
   router.get("/", cat_producto.findAll);
   router.get("/:id", cat_producto.findOne);
-  router.delete("/:id", cat_producto.destroy);
-  router.put("/", cat_producto.update);
+  router.delete("/borrar/:id", cat_producto.destroy);
+  router.put("/actualizar/", cat_producto.update);
   app.use("/api/categoria_producto", router);
 };

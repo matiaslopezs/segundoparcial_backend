@@ -22,27 +22,6 @@ module.exports = (sequelize, Sequelize) => {
 
 
     );
-      nombre: {
-        type: Sequelize.STRING,
-      },
-
-      id: {
-        type: Sequelize.BIGINT,
-        primaryKey: true,
-        autoIncrement: true,
-      },
-    },
-        {
-            classMethods: {
-                associate: function (models) {
-                    // un producto puede perternecer a una categoria  1:1
-                   Categoria_producto.hasOne(models.AdministraciondeProductos);
-                },
-            },
-        }
-
-
-        );
     return Categoria_producto;
   };
   
