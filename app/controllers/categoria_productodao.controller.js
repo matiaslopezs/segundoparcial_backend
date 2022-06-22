@@ -55,6 +55,28 @@ exports.findAll = (req, res) => {
     });
 };
 
+
+
+//GET categoria por id_categoria
+exports.findByProducto = (req, res) => {
+
+
+
+  Categoria_productos.findAll({ where: {id_producto: req.params.id} })
+
+      .then((datos) => {
+        console.log("GET categoria por id producto");
+        res.send(datos);
+      })
+      .catch((err) => {
+        res.status(500).send({
+          message: err.message || "Ocurrió un error al filtrar los consumos por id del cliente.",
+        });
+      });
+};
+
+
+
 //DELETE producto por id
 exports.destroy = (req, res) => {
   var id_producto = req.params.id;

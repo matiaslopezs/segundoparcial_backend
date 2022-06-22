@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
+    <title>Administracion de Productos</title>
+</head>
+<body>
+<div class="container">
+    <div class="py-5 text-center">
+        <h2>Administrar Productos</h2>
+    </div>
+    <div class="row">
+        <div class="col-md-2"></div>
+        <div class="col-md-8" id="app">
+
+            <div class="mb-3">
+                <p>1. Elija la categoria que desea:</p>
+                <select class="form-select" aria-label="Default select example" id="seleccionarCategoria" v-model.number="id_categoria" @click="filtrarProductos()">
+                    <option selected>Listado de Categorias</option>
+                    <option v-for="categoria in categorias_productos" :value="categoria.id">{{categoria.nombre}}</option>
+
+
+
+                </select>
+
+                </div>
+
+                <br>
+                <br>
+
+
+                <div class="mb-3">
+                    <p>Lista de los productos de esa categoria:</p>
+                    <table class="table table-striped table-bordered">
+                        <thead>
+                        <tr>
+                            <th>Nombre del Producto</th>
+                            <th>Precio de Venta</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+
+                        <tr v-for="producto in productos_categoria" >
+                            <td>{{producto.nombre_del_producto}} </td>
+                            <td>{{producto.precio_de_venta}}</td>
+
+                        </tr>
+
+                        </tbody>
+                    </table>
+
+
+                </div>
+
+
+            <br>
+            <br>
+            <div class="mb-3">
+                <p>2.Indique el nombre del producto</p>
+                <input type="text" v-model="nombre_del_producto" class="form-control" id="input_nombre_del_producto" placeholder="Nombre del Producto">
+
+            </div>
+            <br>
+            <br>
+            <div class="mb-3">
+                <p>3.Indique el precio de venta</p>
+                <input type="text" v-model="precio_de_venta" class="form-control" id="input_precio_de_venta" placeholder="Precio de venta">
+
+            </div>
+            <br>
+            <br>
+            <small>registrar nuevo producto:</small>
+            <div class="button" align="center">
+                <button @click= "registrarProducto()" type="button" class="btn btn-outline-primary btn-sm">Registrar Productos</button>
+            </div>
+            <br>
+            <br>
+
+            <div class="mb-3">
+                <p> Lista de Productos: Seleccione el producto a actualizar o eliminar</p>
+                <select @click="cargarProducto()" class="form-select" aria-label="Default select example" v-model.number="producto_id">
+                    <option selected>Elija el producto </option>
+                    <option v-for="producto in productos" :value="producto.id">  ID: {{producto.id}} - Nombre:{{producto.nombre_del_producto}} - Precio: {{producto.precio_de_venta}} </option>
+                </select>
+
+
+
+
+
+
+            </div>
+            <div class="mb-3">
+
+                <br>
+                <br>
+            </div>
+            <div class="button" align="center">
+                <button @click= "delete_producto_by_id()" type="button" class="btn btn-outline-primary btn-sm">Eliminar Producto</button>
+            </div>
+
+            <br>
+
+            <br>
+            <div class="button" align="center">
+                <button @click= "put_producto()" type="button" class="btn btn-outline-primary btn-sm">Actualizar Producto</button>
+            </div>
+            </div>
+        <br>
+
+        <br>
+        <div class="col-md-2"></div>
+    </div>
+</div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+<script src="administracion.js"></script>
+</body>
+</html>

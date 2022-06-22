@@ -58,7 +58,7 @@ async function clientes_get_all() {
 
 const app = new Vue({
     el:'#app',
-    data:{
+    data:{     //  contiene campos que vamos a usar para almacenar datos
         restaurantes:[],
         valorcheck: 0,
         flagmesas: false,
@@ -76,11 +76,13 @@ const app = new Vue({
         ci:null,
         nombre:null,
         apellido:null,
+        categoria_seleccionada: false,
     },
-    mounted:function (){
+    mounted:function () {
         this.beforeCreate()
     },
-    methods:{
+
+    methods:{ // mantienen las definiciones de métodos disponibles dentro del rango de instancia
         beforeCreate: async function(){
             this.restaurantes = await restaurantes_get_all();
             console.log("lista restaurantes:", this.restaurantes);
@@ -153,6 +155,10 @@ const app = new Vue({
                 .catch(err=>console.log(err))
             this.flagcliente = true;
         },
+
+        async cargarLista() {
+
+        },
         async reservar() {
             const cliente = await get_cliente_by_ci(this.ci);
             if (cliente !== null){
@@ -180,7 +186,8 @@ const app = new Vue({
                     window.location.href="menu.html"
                 }).catch(err=>console.log(err))
             }
-        }
+        },
+
     },
 })
 

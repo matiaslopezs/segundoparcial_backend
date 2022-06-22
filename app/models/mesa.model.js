@@ -1,4 +1,4 @@
-const Restaurantes = require('./restaurante.model.js');
+
 const { Model, DataTypes, Deferrable } = require("sequelize");
 const { Mesas } = require("./index.js");
 
