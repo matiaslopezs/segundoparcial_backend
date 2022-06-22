@@ -2,6 +2,7 @@
 const db = require("../models");
 const AdministraciondeProductos = db.AdministraciondeProductos;
 const Op = db.Sequelize.Op;
+const Categoria = db.Categoria_productos;
 
 exports.create = (req, res) => {
 
@@ -22,7 +23,9 @@ exports.create = (req, res) => {
 
 // crea un cliente
 
-    const administracion_de_productos = {
+    const producto = {
+
+
 
         nombre_del_producto: req.body.nombre_del_producto,
 
@@ -35,7 +38,7 @@ exports.create = (req, res) => {
 
 
 
-    AdministraciondeProductos.create(administracion_de_productos)
+    AdministraciondeProductos.create(producto)
 
         .then(data => {
 
@@ -110,25 +113,48 @@ exports.findAll = (req, res) => {
         });
 
 };
-exports.update = (req, res) => {
-    const id = req.params.id;
-    AdministraciondeProductos.update(req.body, {
-        where: { id: id }
-    })
-        .then(num => {
-            if (num == 1) {
-                res.send({
-                    message: "Fue actualizada exitosamente."
-                });
-            } else {
-                res.send({
-                    message: `No se puede actualizar el producto con id=${id}. Tal vez el cliente no ha sido encontrado o req.body estaba vacio!`
-                });
-            }
+
+exports.update = async(req, res) => {
+    if (!req.body.id_categoria) {
+        res.status(400).send({
+            message: "Debe especificar el id de la categoria!"
+        });
+    }
+    const id = req.body.id;
+    try {
+        const producto = await AdministraciondeProductos.findByPk(id);
+        if(!producto){
+            res.status(404).send({
+                message: "No se encuentra el consumo a modificar"
+            });
+        }else{
+            producto.nombre_del_producto = req.body.nombre_del_producto;
+            producto.precio_de_venta = req.body.precio_de_venta;
+            producto.id_categoria = req.body.id_categoria;
+
+            const data = await producto.save();
+            res.send(data);
+        }
+    }catch (error){
+        res.status(500).send({
+            message: "No se pudo actualizar el producto. "+error.message
+        });
+    }
+}
+
+
+//GET categoria por id_categoria
+exports.findByCategoria = (req, res) => {
+
+    AdministraciondeProductos.findAll({ where: {id_categoria: req.params.id_categoria} })
+
+        .then((datos) => {
+            console.log("GET categoria por id producto");
+            res.send(datos);
         })
-        .catch(err => {
+        .catch((err) => {
             res.status(500).send({
-                message: "Error actualizando producto con id=" + id
+                message: err.message || "Ocurrió un error al filtrar los consumos por id del cliente.",
             });
         });
 };
