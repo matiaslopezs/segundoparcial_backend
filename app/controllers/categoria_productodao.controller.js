@@ -3,7 +3,7 @@ const Categoria_productos = db.Categoria_productos;
 const Op = db.Sequelize.Op;
 
 exports.create = (req, res) => {
-
+  console.log("POST categoria de producto");
   // crea un producto
   const producto = {
     nombre: req.body.nombre,
@@ -13,6 +13,7 @@ exports.create = (req, res) => {
   Categoria_productos.create(producto)
     .then((data) => {
       res.send(data);
+      console.log("Categoria creada");
     })
     .catch((err) => {
       res.status(500).send({
@@ -23,7 +24,7 @@ exports.create = (req, res) => {
 
 exports.findOne = (req, res) => {
   const id = req.params.id;
-
+  console.log("GET categoria de producto por id");
   Categoria_productos.findByPk(id)
 
     .then((data) => {
@@ -39,7 +40,7 @@ exports.findOne = (req, res) => {
 
 exports.findAll = (req, res) => {
   const nombre = req.query.nombre;
-
+  console.log("GET all categorias de productos");
   var condition = nombre ? { nombre: { [Op.iLike]: `%${nombre}%` } } : null;
 
   Categoria_productos.findAll({ where: condition })
@@ -58,6 +59,7 @@ exports.findAll = (req, res) => {
 //DELETE categoria producto por id
 exports.destroy = async(req, res) => {
     const {id} = req.params;
+    console.log("DELETE categoria de producto por id");
     try {
         const cat_prod = await Categoria_productos.findByPk(id);
         if (!cat_prod){
@@ -77,6 +79,7 @@ exports.destroy = async(req, res) => {
 
 //PUT categoria producto por id
 exports.update = async(req, res) => {
+  console.log("PUT categoria de producto por id");
     if (!req.body.id) {
       res.status(400).send({
           message: "Debe especificar el id de la categoria!"
