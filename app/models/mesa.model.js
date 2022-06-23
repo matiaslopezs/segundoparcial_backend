@@ -1,4 +1,4 @@
-const Restaurantes = require("./restaurante.model.js");
+const Restaurantes = require('./restaurante.model.js');
 const { Model, DataTypes, Deferrable } = require("sequelize");
 const { Mesas } = require("./index.js");
 
@@ -8,7 +8,6 @@ module.exports = (sequelize, Sequelize) => {
     {
       nombre: {
         type: Sequelize.STRING,
-        unique: true,
       },
 
       coordenada_x: {
@@ -61,6 +60,7 @@ module.exports = (sequelize, Sequelize) => {
           // con la clave externa definida en el modelo fuente ( Mesa).
           Mesa.belongsTo(models.Restaurantes);
           Mesa.hasMany(models.Reservas);
+          Mesa.hasMany(models.Consumos);
         },
       },
     }

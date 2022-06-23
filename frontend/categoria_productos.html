@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
+    <title>Administracion de Categoria de Productos</title>
+</head>
+<body>
+    <div id="app1" class="py-5 text-center container">
+        <h3>Administracion de Categorias de Productos</h3>
+    
+        <div class="container col-md-8 card mt-3">
+          <!--<div>METODO GET</div>-->
+          <div>
+            <div class="mb-3">
+              <button style="margin: 10px" class="btn btn-primary" @click="get_all_categorias">Listar Categorias</button>
+                </br>
+              <input type="text" class="form-control" ref="get_id" placeholder="Id Categoria"/>
+              <div>
+                <button style="margin: 10px" class="btn btn-primary" @click="get_categoria_by_id">Obtener Categoria por Id</button>
+              </div>
+    
+              <input type="text" class="form-control" ref="get_title" placeholder="Nombre Categoria" />
+              <div class="input-group-append">
+                <button style="margin: 10px" class="btn btn-primary" @click="get_categoria_by_nombre">Obtener Categoria por Nombre</button>
+              </div>
+    
+              <button style="margin: 10px" class="btn btn-outline-primary btn-sm" @click="clearGet">Limpiar</button>
+            </div>   
+            
+            <div v-if="getResult" role="alert"><pre>{{getResult}}</pre></div>
+          </div>
+        </div>
+    
+        <div class="container col-md-8 card mt-4">
+          <!--<div>METODO POST</div>-->
+          <div>
+            <div class="mb-3 mt-4">
+              <input type="text" class="form-control" ref="post_nombre" placeholder="Nueva Categoria" />
+            </div>
+            <button style="margin: 10px" class="btn btn-primary" @click="post_categoria_producto">Agregar Categoria</button>
+            </br>
+            <button style="margin: 10px" class="btn btn-outline-primary btn-sm" @click="clearPost">Limpiar</button>
+            <div v-if="postResult" role="alert"><pre>{{postResult}}</pre></div>
+          </div>
+        </div>
+    
+        <div  class="container col-md-8 card mt-3">
+          <!--<div>METODO PUT</div>-->
+          <div>
+            <div class="mb-3 mt-4">
+              <input type="text" class="form-control" ref="put_id" placeholder="Id Categoria"/>
+            </div>
+            <div class="mb-3">
+              <input type="text" class="form-control" ref="put_nombre" placeholder="Nombre Cateogria" />
+            </div>
+            <button style="margin: 10px" class="btn btn-primary" @click="put_categoria_producto">Actualizar Categoria</button>
+            </br>
+            <button style="margin: 10px" class="btn btn-outline-primary btn-sm" @click="clearPut">Limpiar</button>
+    
+            <div v-if="putResult" role="alert"><pre>{{putResult}}</pre></div>
+          </div>
+        </div>
+    
+        <div  class="container col-md-8 card mt-3">
+          <!--<div>METODO DELETE</div>-->
+          <div>
+            <div  class="mb-3 mt-4">
+              <input type="text" class="form-control" ref="delete_id" placeholder="Id Cateogria" />
+              <button style="margin: 10px" class="btn btn-primary" @click="delete_categoria_by_id">Borrar Categoria por Id</button>
+            </br>
+              <button style="margin: 10px" class="btn btn-outline-primary btn-sm" @click="clearDelete">Limpiar</button>
+            </div>    
+            
+            <div v-if="deleteResult" role="alert"><pre>{{deleteResult}}</pre></div>      
+          </div>
+        </div>
+     
+      </div>
+      <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+      <script src="./categoria_productos.js"></script>
+</body>
+</html>
