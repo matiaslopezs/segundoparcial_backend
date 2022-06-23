@@ -130,6 +130,7 @@ const app = new Vue({
         },
         async delete_producto_by_id() {
             const id = this.producto_id;
+
             if (id) {
                 try {
                     const res = await fetch(`${URL}api/administraciondeproductos/borrar/${id}`, {
@@ -145,6 +146,7 @@ const app = new Vue({
                     this.deleteResult = err.message;
                 }
             }
+
         },
         async put_producto() {
 

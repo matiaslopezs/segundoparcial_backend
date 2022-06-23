@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
+    <title>Administracion de Productos</title>
+</head>
+<body>
+
+<div class=" container mt-4" id="app">
+
+    <div class="container">
+        <div class="py-5 text-center">
+            <h2>Administrar Productos</h2>
+        </div>
+        <div class="mb-3">
+            <p>1.Indique el nombre del producto:</p>
+            <input type="text" v-model.number="nombre_del_producto" class="form-control" id="nombre_del_producto">
+            <div id="nombredelproducto" class="form-text"></div>
+        </div>
+        <div class="mb-3">
+            <p>2.Indique el precio de venta:</p>
+            <input type="text" v-model.number="precio_de_venta" class="form-control" id="precio_de_venta">
+            <div id="preciodeventa" class="form-text"></div>
+        </div>
+        <div class="mb-3">
+            <p>3. Ahora elija la categoria del producto</p>
+            <div v-if="flagproducto==true">
+                <select class="form-select" aria-label="Default select example" v-model.number="nombre_categoria">
+                    <option selected>Categorias</option>
+                    <option v-for="categoria in Categoria" :value="categoria.id">{categoria.nombre_categoria}</option>
+                </select>
+            </div>
+            <p>4. Confirme los datos para cargar los productos disponibles</p>
+            <div class="button" align="center">
+                <button @click="registrarProducto()" type="button" class="btn btn-outline-primary">Guardar Producto</button>
+            </div>
+            <p>5. Lista de Productos disponibles</p>
+            <table class="table table-striped table-bordered">
+                <thead>
+                <tr>
+                    <th>Nombre del Producto</th>
+                    <th>Precio de Venta</th>
+                    <th>Categoria</th>
+                </tr>
+                </thead>
+                <tbody>
+
+                <tr v-for="(producto,i) in productos[0]" :key="index">
+                    <td>{{producto[index].nombre_del_producto}} </td>
+                    <td>{{producto[index]. precio_de_venta}}</td>
+                    <td>{{producto[index].id_categoria}}</td>
+                </tr>
+                <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+                <script src="administracion.js"></script>
+                </tbody>
+            </table>
+
+
+        </div>
+    </div>
+</div>
+
+
+</body>
+
+</html>
