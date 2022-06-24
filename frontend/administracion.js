@@ -51,7 +51,8 @@ const app = new Vue({
         categoria_seleccionada:  false,
         producto_seleccionado: [],
         deleteResult: null,
-        putResult: null
+        putResult: null,
+        lista: []
 
 
     },
@@ -66,6 +67,7 @@ const app = new Vue({
             this.categorias_productos =await get_all_categorias();
             console.log("Lista de categorias:", this.categorias_productos);
             this.message = "Hola";
+            this.lista= await productos_get_all();
         },
 
         async cargarCategorias() {
@@ -101,6 +103,9 @@ const app = new Vue({
                 })
                 .catch(err=>console.log(err))
 
+        },
+        async cargarLista() {
+            this.lista= await productos_get_all();
         },
 
         async cargarProducto() {
