@@ -4,97 +4,103 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
-    <title>Administracion de Categoria de Productos</title>
+    <title>Administracion de Productos</title>
 </head>
 <body>
-    <div id="app1" class="py-5 text-center container">
-        <h3>Administracion de Categorias de Productos</h3>
-    
-        <div class="container col-md-8 card mt-3">
-          <!--<div>METODO GET</div>-->
-          <div>
+
+
+<div class="container">
+    <div class="py-5 text-center">
+        <h2>Administrar Categorias</h2>
+    </div>
+    <div class="row">
+        <div class="col-md-2"></div>
+        <div class="col-md-8" id="app">
             <div class="mb-3">
-              <button style="margin: 10px" class="btn btn-primary" @click="obtener_categorias()">Listar Categorias</button>
-                </br>
-              <input type="text" class="form-control" ref="get_id" placeholder="Id Categoria"/>
-              <div>
-                <!--<button style="margin: 10px" class="btn btn-primary" @click="get_categoria_by_id">Obtener Categoria por Id</button>-->
-              </div>
-    
-              <input type="text" class="form-control" ref="get_title" placeholder="Nombre Categoria" />
-              <div class="input-group-append">
-                <!--<button style="margin: 10px" class="btn btn-primary" @click="get_categoria_by_nombre">Obtener Categoria por Nombre</button>-->
-              </div>
-    
-              <button style="margin: 10px" class="btn btn-outline-primary btn-sm" @click="clearGet">Limpiar</button>
-            </div>   
-            <!--<div class="mb-3">
-              <p>Lista de categorias:</p>
-              <table class="table table-striped table-bordered">
-                  <thead>
+                <div class="button" align="center">
+                    <button @click= "cargarLista()" type="button" class="btn btn-outline-primary btn-sm">Ver datos actualizados</button>
+                </div>
+            </div>
+
+            <div class="mb-3">
+                <p>Lista de las categorias disponibles:</p>
+                <table class="table table-striped table-bordered">
+                    <thead>
                     <tr>
-                        <th>Id Categoria</th>
-                        <th>Nombre Categoria</th>
+                        <th>ID</th>
+                        <th>Nombre</th>
                     </tr>
-                  </thead>
-                  <tbody>
-                    <tr v-for="x in listaDeCategorias" >
+                    </thead>
+                    <tbody>
+
+                    <tr v-for="x in lista" >
+                        <td>{{x.id}} </td>
                         <td>{{x.nombre}}</td>
-                        <td>{{x.id}}</td>
+
                     </tr>
-                  </tbody>
-              </table>
+
+                    </tbody>
+                </table>
+
             </div>
-            <div v-if="getResult" role="alert"><pre>{{getResult}}</pre></div>
-          </div>
-        </div>
-    
-        <div class="container col-md-8 card mt-4">
-          <!--<div>METODO POST</div>
-          <div>
-            <div class="mb-3 mt-4">
-              <input type="text" class="form-control" ref="post_nombre" placeholder="Nueva Categoria" />
-            </div>
-            <button style="margin: 10px" class="btn btn-primary" @click="post_categoria_producto">Agregar Categoria</button>
-            </br>
-            <button style="margin: 10px" class="btn btn-outline-primary btn-sm" @click="clearPost">Limpiar</button>
-            <div v-if="postResult" role="alert"><pre>{{postResult}}</pre></div>
-          </div>
-        </div>
-    
-        <div  class="container col-md-8 card mt-3">
-          <!--<div>METODO PUT</div>
-          <div>
-            <div class="mb-3 mt-4">
-              <input type="text" class="form-control" ref="put_id" placeholder="Id Categoria"/>
-            </div>
+            <br>
+            <br>
+            <h4> Introduzca una nueva categoria </h4>
+            <br>
+            <br>
+
             <div class="mb-3">
-              <input type="text" class="form-control" ref="put_nombre" placeholder="Nombre Cateogria" />
+                <p>2.Indique el nombre de la categoria</p>
+                <input type="text" v-model="nombre" class="form-control" id="input_nombre" placeholder="Nombre de la Categoria">
+
             </div>
-            <button style="margin: 10px" class="btn btn-primary" @click="put_categoria_producto">Actualizar Categoria</button>
-            </br>
-            <button style="margin: 10px" class="btn btn-outline-primary btn-sm" @click="clearPut">Limpiar</button>
-    
-            <div v-if="putResult" role="alert"><pre>{{putResult}}</pre></div>
-          </div>
+
+            <br>
+            <br>
+            <div class="button" align="center">
+                <button @click= "cargarCategoria()" type="button" class="btn btn-outline-primary btn-sm">Crear</button>
+            </div>
+
+            <div class="mb-3">
+                <p>1. Elija la categoria:</p>
+                <select class="form-select" aria-label="Default select example" id="id_categoria" v-model.number="id_categoria" @click="verCategoria()">
+                    <option selected>Listado de Categorias</option>
+                    <option v-for="categoria in lista" :value="categoria.id">{{categoria.nombre}}</option>
+
+
+
+                </select>
+
+            </div>
+
+            <ul>
+                <li> {{id_categoria}} </li>
+            </ul>
+
+
+
+
+
+        <br>
+        <br>
+        <div class="mb-3">
+            <div class="button" align="center">
+                <button @click= "delete_categoria_by_id()" type="button" class="btn btn-outline-primary btn-sm">Eliminar</button>
+            </div>
         </div>
-    
-        <div  class="container col-md-8 card mt-3">
-          <!--<div>METODO DELETE</div>
-          <div>
-            <div  class="mb-3 mt-4">
-              <input type="text" class="form-control" ref="delete_id" placeholder="Id Cateogria" />
-              <button style="margin: 10px" class="btn btn-primary" @click="delete_categoria_by_id">Borrar Categoria por Id</button>
-            </br>
-              <button style="margin: 10px" class="btn btn-outline-primary btn-sm" @click="clearDelete">Limpiar</button>
-            </div>    
-            
-            <div v-if="deleteResult" role="alert"><pre>{{deleteResult}}</pre></div>      
-          </div>
-        </div>-->
-     
-      </div>
-      <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
-      <script src="./categoria_productos.js"></script>
+        <br>
+        <br>
+        <div class="mb-3">
+            <div class="button" align="center">
+                <button @click= "actualizarCategoria()" type="button" class="btn btn-outline-primary btn-sm">Actualizar</button>
+            </div>
+        </div>
+    </div>
+    </div>
+</div>
+
+
+<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+<script src="categoria.js"></script>
 </body>
 </html>

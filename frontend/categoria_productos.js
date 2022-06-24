@@ -1,175 +1,132 @@
-const URL = "http://localhost:9090/api";
+const URL="http://localhost:9090/"
 
-function get_all_categorias () {
-  try {
-    const res = fetch(`${URL}/categoria_producto/`);
-    if (!res.ok) {
-      const message = `Ha ocurrido un error: ${res.status} - ${res.statusText}`;
-      throw new Error(message);
+const productos_get_all= async()=> {
+    const res = await fetch(`${URL}api/categoria_producto/`);
+    if(res){
+        const data = res.json();
+        return data;
     }
-    const data = res.json();
-    const result = {
-      status: res.status + "-" + res.statusText,
-      data: data,
-    };
-    console.log(result.data);
-    this.getResult = this.fortmatResponse(result);
-  } catch (err) {
-    this.getResult = err.message;
-  }
 }
-function get_categoria_by_id() {
-  const id = this.$refs.get_id.value; //el valor del id cargado
-  if (id) {
-    try {
-      const res = fetch(`${URL}/categoria_producto/${id}`);
-      if (!res.ok) {
-        const message = `Ha ocurrido un error: ${res.status} - ${res.statusText}`;
-        throw new Error(message);
-      }
-      const data = res.json();
-      const result = {
-        data: data,
-        status: res.status,
-      };
-      this.getResult = this.fortmatResponse(result);
-    } catch (err) {
-      this.getResult = err.message;
+const get_categoria_by_id = async (id_categoria) =>{
+    resp = await fetch(URL+"api/categoria_producto/"+id_categoria);
+    if (resp){
+        return resp.json()
     }
-  }
-}
-function get_categoria_by_nombre() {
-  const nombre = this.$refs.get_title.value;
-  if (nombre) {
-    try {
-      const res = fetch(`${URL}/categoria_producto?nombre=${nombre}`);
-      if (!res.ok) {
-        const message = `Ha ocurrido un error: ${res.status} - ${res.statusText}`;
-        throw new Error(message);
-      }
-      const data = res.json();
-      const result = {
-        status: res.status + "-" + res.statusText,
-        data: data,
-      };
-      this.getResult = this.fortmatResponse(result);
-    } catch (err) {
-      this.getResult = err.message;
-    }
-  }
-}
-function post_categoria_producto() {
-  const post_categoria = {
-    nombre: this.$refs.post_nombre.value,
-  };
-  try {
-    const res = fetch(`${URL}/categoria_producto`, {
-      method: "post",
-      headers: {
-        "Content-Type": "application/json",
-        "x-access-token": "token-value",
-      },
-      body: JSON.stringify(post_categoria),
-    });
-    if (!res.ok) {
-      const message = `Ha ocurrido un error: ${res.status} - ${res.statusText}`;
-      throw new Error(message);
-    }
-    const data = res.json();
-    const result = {
-      status: res.status + "-" + res.statusText,
-      data: data,
-    };
-    this.postResult = this.fortmatResponse(result);
-  } catch (err) {
-    this.postResult = err.message;
-  }
-}
-function put_categoria_producto() {
-  const { put_id: id, put_nombre } = this.$refs;
-  if (id) {
-    const put_categoria = {
-      id: id.value,
-      nombre: put_nombre.value,
-    };
-    try {
-      const res = fetch(`${URL}/categoria_producto/actualizar/`, {
-        method: "put",
-        headers: {
-          "Content-Type": "application/json",
-          "x-access-token": "token-value",
-        },
-        body: JSON.stringify(put_categoria),
-      });
-      if (!res.ok) {
-        const message = `Ha ocurrido un error: ${res.status} - ${res.statusText}`;
-        throw new Error(message);
-      }
-      const data = res.json();
-      const result = {
-        status: res.status + "-" + res.statusText,
-        data: data,
-      };
-      this.putResult = this.fortmatResponse(result);
-    } catch (err) {
-      this.putResult = err.message;
-    }
-  }
-}
-function delete_categoria_by_id() {
-  const id = this.$refs.delete_id.value;
-  if (id) {
-    try {
-      const res = fetch(`${URL}/categoria_producto/borrar/${id}`, {
-        method: "delete",
-      });
-      const data = res.json();
-      const result = {
-        status: res.status + "-" + res.statusText,
-        data: data,
-      };
-      this.deleteResult = this.fortmatResponse(result);
-    } catch (err) {
-      this.deleteResult = err.message;
-    }
-  }
+
 }
 
 const app = new Vue({
-  el: "#app1",
-  data: {
-    listaDeCategorias:[],
-      getResult:null,
-      postResult: null,
-      putResult: null,
-      deleteResult: null,
-  },
-  mounted:function () {
-    this.beforeCreate()
-  },
-  methods: {
-    fortmatResponse(res) {
-      return JSON.stringify(res.data, null, 2);
+    el: '#app',
+    data: {
+       lista: [],
+        nombre: null,
+        id_categoria: null
+
     },
-    beforeCreate: async function(){
-      this.listaDeCategorias = get_all_categorias();
-      console.log("lista categorias:", this.listaDeCategorias);
+
+    mounted:function () {
+        this.beforeCreate()
     },
-    async obtener_categrorias (){
-      this.listaDeCategorias = get_all_categorias();
-      console.log(this.listaDeCategorias);
-    },
-    clearGet() {
-      this.getResult = null;
-    },
-    clearPost() {
-      this.postResult = null;
-    },
-    clearPut() {
-      this.putResult = null;
-    },
-    clearDelete() {
-      this.deleteResult = null;
-    },
-  },
+    methods: {
+        beforeCreate: async function () {
+           this.lista = await productos_get_all();
+           console.log("lista: ", this.lista);
+
+        },
+        async cargarLista() {
+            this.lista= await productos_get_all();
+        },
+
+        async cargarCategoria() {
+            let categoria = {
+                nombre: this.nombre
+
+            };
+            fetch(URL+"api/categoria_producto/",{
+                method: 'POST',
+                body:JSON.stringify(categoria),
+                headers:{
+                    'Content-Type': 'application/json'
+                }
+            }).then(response =>{
+                if (response.ok){return response.json();}
+                else { throw "Error al crear la categoria"}
+            })
+                .then(data => {
+                    this.producto_id=data.id;
+                    console.log("Categoria creada",data)
+                    alert("Categoria creada")
+                })
+                .catch(err=>console.log(err))
+        },
+        async verCategoria() {
+            if (this.id_categoria != null){
+
+                let categoria = await get_categoria_by_id(this.id_categoria);
+                console.log("Dato: ", categoria);
+                this.id_categoria = categoria.id;
+                this.nombre = categoria.nombre;
+
+            }else {
+                this.id_categoria = 0;
+                this.nombre=null;
+                console.log("Categoria retorno null");
+            }
+
+
+        },
+        async delete_categoria_by_id() {
+            console.log("ID", this.id_categoria);
+            const id = this.id_categoria;
+            if (id) {
+                try {
+                    const res = await fetch(`${URL}api/categoria_producto/borrar/${id}`, {
+                        method: "delete",
+                    });
+                    const data = await res.json();
+                    const result = {
+                        status: res.status + "-" + res.statusText,
+                        data: data,
+                    };
+                    alert("Categoria eliminada")
+                } catch (err) {
+                    this.deleteResult = err.message;
+                }
+            }
+        },
+        async actualizarCategoria() {
+
+
+            const put_categoria = {
+                id: this.id_categoria,
+                nombre: this.nombre
+            };
+
+            try {
+                const res = await fetch(`${URL}api/categoria_producto/actualizar/`, {
+                    method: "put",
+                    headers: {
+                        "Content-Type": "application/json",
+                        "x-access-token": "token-value",
+                    },
+                    body: JSON.stringify(put_categoria),
+                });
+                if (!res.ok) {
+                    const message = `Ha ocurrido un error: ${res.status} - ${res.statusText}`;
+                    throw new Error(message);
+                }
+                const data = await res.json();
+                const result = {
+                    status: res.status + "-" + res.statusText,
+                    data: data,
+                };
+                console.log("Se ha actualizado");
+                alert("Categoria actualizada")
+            } catch (err) {
+                this.putResult = err.message;
+            }
+
+        }
+        }
 });
+
